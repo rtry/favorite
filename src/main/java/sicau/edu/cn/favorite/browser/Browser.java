@@ -7,6 +7,10 @@
  */
 package sicau.edu.cn.favorite.browser;
 
+import java.util.List;
+
+import sicau.edu.cn.favorite.browser.entry.Bookmark;
+
 /**
  * 类名称：Browser <br>
  * 类描述: 游览器抽象<br>
@@ -23,4 +27,6 @@ public abstract class Browser {
 	public abstract String getName();
 
 	public abstract String getBookmarksURI();
+
+	public abstract List<Bookmark> getBookmarks();
 }

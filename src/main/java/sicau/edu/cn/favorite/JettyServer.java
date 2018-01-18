@@ -10,6 +10,8 @@ package sicau.edu.cn.favorite;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import sicau.edu.cn.favorite.constant.JettyConstant;
+
 /**
  * 类名称：JettyServer <br>
  * 类描述: <br>
@@ -33,7 +35,7 @@ public class JettyServer {
 			context.setParentLoaderPriority(true);
 			server.setHandler(context);
 			server.start();
-			Thread execThread = new Thread(new ExecThread(server));
+			Thread execThread = new Thread(new ExecBrowserThread(server));
 			execThread.start();
 			server.join();
 		} catch (InterruptedException e) {

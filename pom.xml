@@ -99,6 +99,39 @@
 					</webAppConfig>
 				</configuration>
 			</plugin>
+			
+			<!-- 打包插件 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.0.0</version>
+
+				<!-- 配置--> 
+				<configuration>
+					<appendAssemblyId>false</appendAssemblyId>
+					<!-- 依赖配置文件 -->
+					<descriptors>
+						<descriptor>src/main/resources/assembly.xml</descriptor>
+					</descriptors>
+					<!-- 主函数入口 -->
+					<archive>
+						<manifest>
+							<mainClass>sicau.edu.cn.favorite.JettyServer</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<!-- 执行 -->
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<!-- 单例 -->
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

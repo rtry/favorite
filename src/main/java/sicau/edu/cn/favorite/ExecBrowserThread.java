@@ -7,11 +7,13 @@ import java.net.URISyntaxException;
 
 import org.eclipse.jetty.server.Server;
 
-public class ExecThread implements Runnable {
+import sicau.edu.cn.favorite.constant.JettyConstant;
+
+public class ExecBrowserThread implements Runnable {
 
 	Server server;
 
-	public ExecThread(Server server) {
+	public ExecBrowserThread(Server server) {
 		this.server = server;
 	}
 

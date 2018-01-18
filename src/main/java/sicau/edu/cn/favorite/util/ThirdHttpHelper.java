@@ -5,7 +5,7 @@
  * 日期：2017年8月29日    
  * Copyright pxw Corporation 2017 版权所有   
  */
-package sicau.edu.cn.favorite;
+package sicau.edu.cn.favorite.util;
 
 import java.util.ArrayList;
 import java.util.List;

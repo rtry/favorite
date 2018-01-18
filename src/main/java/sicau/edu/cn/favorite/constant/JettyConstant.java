@@ -5,7 +5,7 @@
  * 日期：2018年1月4日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite;
+package sicau.edu.cn.favorite.constant;
 
 /**
  * 类名称：JettyConstant <br>
