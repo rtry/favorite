@@ -7,6 +7,7 @@
  */
 package sicau.edu.cn.favorite.servlet;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
@@ -29,11 +30,13 @@ public class JettyServer {
 
 	private static Server server;
 
+	private static Logger logger = Logger.getLogger(JettyServer.class);
+
 	public static void start() {
 		if (!flag)
 			flag = true;
 		else {
-			System.out.println("程序已经启动...");
+			logger.warn("程序已经启动...");
 			return;
 		}
 
@@ -43,7 +46,7 @@ public class JettyServer {
 		context.setContextPath(JettyConstant.urlseparator);
 		String proPath = System.getProperty("user.dir");
 
-		System.out.println("项目路径：" + proPath);
+		logger.info("项目路径：" + proPath);
 		context.setResourceBase(proPath + "/src/main/webapp");
 		context.setParentLoaderPriority(true);
 		server.setHandler(context);
@@ -52,7 +55,9 @@ public class JettyServer {
 			// 启动服务器
 			server.start();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("启动异常", e);
+			JettyServer.close();
+			System.exit(1);
 		}
 	}
 
@@ -61,7 +66,7 @@ public class JettyServer {
 			try {
 				server.stop();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("关闭服务异常", e);
 			}
 	}
 }

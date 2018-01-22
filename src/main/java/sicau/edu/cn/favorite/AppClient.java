@@ -7,6 +7,8 @@
  */
 package sicau.edu.cn.favorite;
 
+import org.apache.log4j.PropertyConfigurator;
+
 import sicau.edu.cn.favorite.browser.BrowserOperation;
 import sicau.edu.cn.favorite.constant.JettyConstant;
 import sicau.edu.cn.favorite.servlet.JettyServer;
@@ -25,8 +27,9 @@ import sicau.edu.cn.favorite.servlet.JettyServer;
 public class AppClient {
 
 	public static void main(String[] args) {
+		String log4jPath = "props/log4j.properties";
+		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
 		JettyServer.start();
 		BrowserOperation.execUrl(JettyConstant.indexUrl);
-
 	}
 }
