@@ -99,14 +99,14 @@
 					</webAppConfig>
 				</configuration>
 			</plugin>
-			
+
 			<!-- 打包插件 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.0.0</version>
 
-				<!-- 配置--> 
+				<!-- 配置 -->
 				<configuration>
 					<appendAssemblyId>false</appendAssemblyId>
 					<!-- 依赖配置文件 -->
