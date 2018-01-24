@@ -1,12 +1,9 @@
 package sicau.edu.cn.favorite.es;
 
-import io.searchbox.annotations.JestId;
-
 import java.util.Date;
 
 public class Article {
 
-	@JestId
 	private int id;
 	private String title;
 	private String content;

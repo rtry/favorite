@@ -121,8 +121,5 @@ public class ThirdHttpHelper {
 		return result;
 	}
 
-	public static String invokeWithJSONBody(String url, Map<String, String> params, String method) {
-		return url;
-	}
 
 }

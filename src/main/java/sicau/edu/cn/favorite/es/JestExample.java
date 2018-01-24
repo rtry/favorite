@@ -31,23 +31,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
+
+import sicau.edu.cn.favorite.AppClient;
 
 import com.google.gson.GsonBuilder;
 
 public class JestExample {
 
 	public static void main(String[] args) throws Exception {
-		// Felicity article3 = new Felicity();
-		// article3.setAge(34);
-		// article3.setName("xcx");
-		// Index index3 = new
-		// Index.Builder(article3).index("felicity").type("tuser").build();
-		// JestClient jestClient = JestExample.getJestClient();
-		// JestResult jestResult1 = jestClient.execute(index3);
-		// System.out.println(jestResult1.getJsonString());
+		String log4jPath = "props/log4j.properties";
+		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
+//		Felicity article3 = new Felicity();
+//		article3.setAge(34);
+//		article3.setName("xcx");
+//		Index index3 = new Index.Builder(article3).index("felicity").type("tuser").build();
+//		JestClient jestClient = JestExample.getJestClient();
+//		JestResult jestResult1 = jestClient.execute(index3);
+//		System.out.println(jestResult1.getJsonString());
 		// createIndex();
 
 		// SearchResult result = jestClient.execute(search);
@@ -55,14 +59,14 @@ public class JestExample {
 		// deleteIndex();
 		// createIndex();
 		// bulkIndex();
-		 createSearch("性虐");
+//		createSearch("性虐");
 		// searchAll();
 		// getDocument("article", "article", "1");
 		// getDocument("article","article","2");
 		// getDocument("article","article","3");
 		// updateDocument("article", "article", "3");
 		// getDocument("article", "article", "3");
-		// deleteDocument("article","article","1");
+		 deleteDocument("article","doc","1");
 		// nodesStats();
 		// health();
 		// nodesInfo();
@@ -284,9 +288,9 @@ public class JestExample {
 		highlightBuilder.preTags("<em>").postTags("</em>");// 高亮标签
 		highlightBuilder.fragmentSize(200);// 高亮内容长度
 		searchSourceBuilder.highlighter(highlightBuilder);
-		System.out.println(":::"+searchSourceBuilder.toString());
+		System.out.println(":::" + searchSourceBuilder.toString());
 		Search search = new Search.Builder(searchSourceBuilder.toString()).addIndex("article")
-				.build();
+				.addType("doc").build();
 		SearchResult result = jestClient.execute(search);
 		System.out.println("本次查询共查到：" + result.getTotal() + "篇文章！");
 		List<Hit<Article, Void>> hits = result.getHits(Article.class);
