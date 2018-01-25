@@ -45,28 +45,29 @@ public class JestExample {
 	public static void main(String[] args) throws Exception {
 		String log4jPath = "props/log4j.properties";
 		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
-//		Felicity article3 = new Felicity();
-//		article3.setAge(34);
-//		article3.setName("xcx");
-//		Index index3 = new Index.Builder(article3).index("felicity").type("tuser").build();
-//		JestClient jestClient = JestExample.getJestClient();
-//		JestResult jestResult1 = jestClient.execute(index3);
-//		System.out.println(jestResult1.getJsonString());
-		// createIndex();
+		// Felicity article3 = new Felicity();
+		// article3.setAge(34);
+		// article3.setName("xcx");
+		// Index index3 = new
+		// Index.Builder(article3).index("felicity").type("tuser").build();
+		// JestClient jestClient = JestExample.getJestClient();
+		// JestResult jestResult1 = jestClient.execute(index3);
+		// System.out.println(jestResult1.getJsonString());
+		 createIndex();
 
 		// SearchResult result = jestClient.execute(search);
 
-		// deleteIndex();
+//		deleteIndex();
 		// createIndex();
 		// bulkIndex();
-//		createSearch("性虐");
+		// createSearch("性虐");
 		// searchAll();
 		// getDocument("article", "article", "1");
 		// getDocument("article","article","2");
 		// getDocument("article","article","3");
 		// updateDocument("article", "article", "3");
 		// getDocument("article", "article", "3");
-		 deleteDocument("article","doc","1");
+//		 deleteDocument("article","doc","2");
 		// nodesStats();
 		// health();
 		// nodesInfo();

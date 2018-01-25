@@ -10,6 +10,7 @@ package sicau.edu.cn.favorite.es;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -69,7 +70,7 @@ public class RestClient {
 		return result;
 	}
 
-	public static String insert1(SuperESEntry<?> entry) {
+	public static String insert(SuperESEntry<?> entry) {
 		if (entry.getSource() == null) {
 			log.info("source为空，不能插入");
 			return null;
@@ -107,10 +108,34 @@ public class RestClient {
 		// RestClient.insert1(fe);
 
 		// 搜索
-		String str = "{\"query\" : {\"match\" : {\"name\" : \"大当家\"}}}";
-		System.out.println(str);
-		JSONObject query = JSONObject.parseObject(str);
-		String tt = RestClient.queryByDSL(null, query, new FelicityTuser(null));
-		System.out.println(tt);
+		// String str = "{\"query\" : {\"match\" : {\"name\" : \"大当家\"}}}";
+		// System.out.println(str);
+		// JSONObject query = JSONObject.parseObject(str);
+		// String tt = RestClient.queryByDSL(null, query, new
+		// FelicityTuser(null));
+		// System.out.println(tt);
+
+		// 删除
+		String tt1 = RestClient.deleteById(new ArticleDoc(null), "AWEueXeKDIbBed4asij4");
+		System.out.println(tt1);
+
+	}
+
+	public static String deleteById(SuperESEntry<?> entry, String id) {
+		String url = esUrl.concat("/").concat(entry.getIndex()).concat("/").concat(entry.getType())
+				.concat("/").concat(id);
+		HttpDelete httpPost = new HttpDelete(url);
+		String result = "";
+		try {
+			CloseableHttpResponse resp = httpClient.execute(httpPost);
+			HttpEntity entity = resp.getEntity();
+			result = EntityUtils.toString(entity, CHARSET);
+			resp.close();
+		} catch (Exception e) {
+			log.error("invoke third api error", e);
+		}
+		log.info("invoke es insert result = " + result);
+		log.info("------------------------------------------------------------------------");
+		return result;
 	}
 }
