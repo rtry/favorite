@@ -17,9 +17,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
-import sicau.edu.cn.favorite.AppClient;
 import sicau.edu.cn.favorite.util.ThirdHttpHelper;
 
 import com.alibaba.fastjson.JSON;
@@ -94,31 +92,6 @@ public class RestClient {
 		log.info("invoke es insert result = " + result);
 		log.info("------------------------------------------------------------------------");
 		return result;
-	}
-
-	public static void main(String[] args) {
-		String log4jPath = "props/log4j.properties";
-		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
-
-		// 插入
-		// Felicity felicity = new Felicity();
-		// felicity.setAge(44);
-		// felicity.setName("大当家");
-		// FelicityTuser fe = new FelicityTuser(felicity);
-		// RestClient.insert1(fe);
-
-		// 搜索
-		// String str = "{\"query\" : {\"match\" : {\"name\" : \"大当家\"}}}";
-		// System.out.println(str);
-		// JSONObject query = JSONObject.parseObject(str);
-		// String tt = RestClient.queryByDSL(null, query, new
-		// FelicityTuser(null));
-		// System.out.println(tt);
-
-		// 删除
-		String tt1 = RestClient.deleteById(new ArticleDoc(null), "AWEueXeKDIbBed4asij4");
-		System.out.println(tt1);
-
 	}
 
 	public static String deleteById(SuperESEntry<?> entry, String id) {
