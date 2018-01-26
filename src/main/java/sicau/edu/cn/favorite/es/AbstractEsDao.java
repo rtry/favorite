@@ -1,8 +1,8 @@
 /**    
- * 文件名：RestClient.java    
+ * 文件名：ArticleDocEsDao.java    
  *    
  * 版本信息：    
- * 日期：2018年1月24日    
+ * 日期：2018年1月26日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
 package sicau.edu.cn.favorite.es;
@@ -11,6 +11,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -24,17 +25,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * 类名称：RestClient <br>
- * 类描述: <br>
+ * 类名称：ArticleDocEsDao <br>
+ * 类描述: ES对象基本操作方法，基类<br>
  * 创建人：felicity <br>
- * 创建时间：2018年1月24日 下午2:33:40 <br>
+ * 创建时间：2018年1月26日 下午3:30:40 <br>
  * 修改人：felicity <br>
- * 修改时间：2018年1月24日 下午2:33:40 <br>
+ * 修改时间：2018年1月26日 下午3:30:40 <br>
  * 修改备注:
  * @version
  * @see
  */
-public class RestClient {
+public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T> {
+
 	private static CloseableHttpClient httpClient = HttpClients.createDefault();
 
 	private static Logger log = Logger.getLogger(ThirdHttpHelper.class);
@@ -45,8 +47,11 @@ public class RestClient {
 
 	private static final String esUrl = "http://192.168.253.104:9200";
 
-	public static String queryByDSL(String url, JSONObject query, SuperESEntry<?> entry) {
-		url = esUrl + "/" + entry.getIndex() + "/" + entry.getType() + "/_search";
+	String baseUrl = esUrl + "/" + getIndex() + "/" + getType();
+
+	@Override
+	public String queryByDSL(JSONObject query) {
+		String url = baseUrl + "/_search";
 		log.info("invoke es query ...");
 		log.info("url:" + url);
 		String result = "";
@@ -68,14 +73,14 @@ public class RestClient {
 		return result;
 	}
 
-	public static String insert(SuperESEntry<?> entry) {
-		if (entry.getSource() == null) {
-			log.info("source为空，不能插入");
+	@Override
+	public String insert(T t) {
+		if (t == null) {
+			log.info("对象为空，不能Insert...");
 			return null;
 		}
-		String json = JSON.toJSONString(entry.getSource());
-		String url = esUrl.concat("/").concat(entry.getIndex()).concat("/").concat(entry.getType());
-		HttpPost httpPost = new HttpPost(url);
+		String json = JSON.toJSONString(t);
+		HttpPost httpPost = new HttpPost(baseUrl);
 		String result = "";
 
 		EntityBuilder entityBuilder = EntityBuilder.create().setText(json)
@@ -91,12 +96,31 @@ public class RestClient {
 		}
 		log.info("invoke es insert result = " + result);
 		log.info("------------------------------------------------------------------------");
-		return result;
+		String id = JSON.parseObject(result).get("_id") + "";
+		return id;
 	}
 
-	public static String deleteById(SuperESEntry<?> entry, String id) {
-		String url = esUrl.concat("/").concat(entry.getIndex()).concat("/").concat(entry.getType())
-				.concat("/").concat(id);
+	@Override
+	public T getById(String id, Class<T> t) {
+		String url = baseUrl + "/" + id;
+		HttpGet httpGet = new HttpGet(url);
+		String result = "";
+		try {
+			CloseableHttpResponse resp = httpClient.execute(httpGet);
+			HttpEntity entity = resp.getEntity();
+			result = EntityUtils.toString(entity, CHARSET);
+			resp.close();
+		} catch (Exception e) {
+			log.error("invoke third api error", e);
+		}
+		log.info("invoke es insert result = " + result);
+		log.info("------------------------------------------------------------------------");
+		return JSON.parseObject(result).getObject("_source", t);
+	}
+
+	@Override
+	public String deleteById(String id) {
+		String url = baseUrl + "/" + id;
 		HttpDelete httpPost = new HttpDelete(url);
 		String result = "";
 		try {
@@ -111,4 +135,5 @@ public class RestClient {
 		log.info("------------------------------------------------------------------------");
 		return result;
 	}
+
 }

@@ -5,7 +5,7 @@
  * 日期：2018年1月23日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.es;
+package sicau.edu.cn.favorite.es.test;
 
 /**
  * 类名称：Felicity <br>
