@@ -50,7 +50,6 @@ public class Chrome extends Browser {
 				fis.read(buffer);
 				fis.close();
 				JSONObject json = (JSONObject) JSON.parse(buffer);
-				System.out.println(json);
 				JSONObject root = json.getJSONObject("roots");
 				JSONObject bars = root.getJSONObject("bookmark_bar");
 				List<Bookmark> bookmarks = new ArrayList<Bookmark>();
@@ -83,8 +82,7 @@ public class Chrome extends Browser {
 			String url = parent.getString("url");
 			String name = parent.getString("name");
 			Long createDate = parent.getLong("date_added");
-			String id = MD5Util.MD5Encode(url.concat("happing").concat(createDate + ""), null);
-			Bookmark bookmark = new Bookmark(id, name, url, createDate);
+			Bookmark bookmark = new Bookmark(name, url, createDate);
 			store.add(bookmark);
 		}
 	}

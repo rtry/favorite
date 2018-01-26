@@ -72,4 +72,10 @@ public class Bookmark {
 		this.createDate = createDate;
 	}
 
+	public Bookmark(String name, String url, Long createDate) {
+		this.name = name;
+		this.url = url;
+		this.createDate = createDate;
+	}
+
 }

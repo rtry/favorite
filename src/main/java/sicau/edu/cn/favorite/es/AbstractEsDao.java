@@ -7,6 +7,8 @@
  */
 package sicau.edu.cn.favorite.es;
 
+import java.util.Collection;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -52,8 +54,6 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 	@Override
 	public String queryByDSL(JSONObject query) {
 		String url = baseUrl + "/_search";
-		log.info("invoke es query ...");
-		log.info("url:" + url);
 		String result = "";
 		String json = query.toJSONString();
 		HttpPost httpPost = new HttpPost(url);
@@ -111,9 +111,9 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 			result = EntityUtils.toString(entity, CHARSET);
 			resp.close();
 		} catch (Exception e) {
-			log.error("invoke third api error", e);
+			log.error("invoke getById api error", e);
 		}
-		log.info("invoke es insert result = " + result);
+		log.info("invoke es getById result = " + result);
 		log.info("------------------------------------------------------------------------");
 		return JSON.parseObject(result).getObject("_source", t);
 	}
@@ -129,11 +129,44 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 			result = EntityUtils.toString(entity, CHARSET);
 			resp.close();
 		} catch (Exception e) {
-			log.error("invoke third api error", e);
+			log.error("invoke deleteById api error", e);
 		}
-		log.info("invoke es insert result = " + result);
+		log.info("invoke es deleteById result = " + result);
 		log.info("------------------------------------------------------------------------");
 		return result;
 	}
 
+	@Override
+	public EsPage<T> getListByDSL(JSONObject query) {
+		return null;
+	}
+
+	@Override
+	public void bulkInsert(Collection<T> cs) {
+		StringBuffer sb = new StringBuffer();
+		String url = baseUrl + "/_bulk";
+		HttpPost httpPost = new HttpPost(url);
+		String result = "";
+
+		String idx = "{\"index\": {}}\r\n";
+		for (T t : cs) {
+			String temp = JSON.toJSONString(t);
+			sb.append(idx).append(temp).append("\r\n");
+		}
+		if (sb.length() == 0)
+			return;
+		EntityBuilder entityBuilder = EntityBuilder.create().setText(sb.toString())
+				.setContentType(requestContentType);
+		httpPost.setEntity(entityBuilder.build());
+		try {
+			CloseableHttpResponse resp = httpClient.execute(httpPost);
+			HttpEntity entity = resp.getEntity();
+			result = EntityUtils.toString(entity, CHARSET);
+			resp.close();
+		} catch (Exception e) {
+			log.error("invoke bulkInsert api error", e);
+		}
+		log.info("invoke es bulkInsert result = " + result);
+		log.info("------------------------------------------------------------------------");
+	}
 }

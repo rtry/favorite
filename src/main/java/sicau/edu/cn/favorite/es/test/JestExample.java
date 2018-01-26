@@ -53,11 +53,12 @@ public class JestExample {
 		// JestClient jestClient = JestExample.getJestClient();
 		// JestResult jestResult1 = jestClient.execute(index3);
 		// System.out.println(jestResult1.getJsonString());
-		 createIndex();
+		// createIndex();
 
+		bulkIndex();
 		// SearchResult result = jestClient.execute(search);
 
-//		deleteIndex();
+		// deleteIndex();
 		// createIndex();
 		// bulkIndex();
 		// createSearch("性虐");
@@ -67,7 +68,7 @@ public class JestExample {
 		// getDocument("article","article","3");
 		// updateDocument("article", "article", "3");
 		// getDocument("article", "article", "3");
-//		 deleteDocument("article","doc","2");
+		// deleteDocument("article","doc","2");
 		// nodesStats();
 		// health();
 		// nodesInfo();

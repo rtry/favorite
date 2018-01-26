@@ -7,6 +7,9 @@
  */
 package sicau.edu.cn.favorite.es;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -33,4 +36,11 @@ public interface IRestClient<T> {
 
 	// 通过ID获取
 	T getById(String id, Class<T> t);
+
+	// 批量查询(分页)
+	EsPage<T> getListByDSL(JSONObject query);
+
+	// 批量插入
+	void bulkInsert(Collection<T> cs);
+
 }

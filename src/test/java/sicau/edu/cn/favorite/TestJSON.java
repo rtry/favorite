@@ -1,12 +1,26 @@
 package sicau.edu.cn.favorite;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.log4j.PropertyConfigurator;
+import org.junit.Before;
 import org.junit.Test;
 
-import sicau.edu.cn.favorite.browser.impl.Chrome;
+import sicau.edu.cn.favorite.es.browser.BookmarkDao;
+import sicau.edu.cn.favorite.es.test.Article;
 import sicau.edu.cn.favorite.es.test.ArticleDocDao;
 
+import com.alibaba.fastjson.JSON;
+
 public class TestJSON {
+
+	@Before
+	public void bf() {
+		String log4jPath = "props/log4j.properties";
+		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
+	}
 
 	/**
 	 * testJJ 测试Chrome的收藏标签
@@ -14,15 +28,16 @@ public class TestJSON {
 	 */
 	@Test
 	public void testJJ() {
-		Chrome c = new Chrome();
-		c.getBookmarks();
+		BookmarkDao bdao = new BookmarkDao();
+		// Chrome c = new Chrome();
+		// List<Bookmark> rt = c.getBookmarks();
+		// bdao.bulkInsert(rt);
+		String str = "{\"query\" : {\"match\" : {\"name\" : \"spring\"}}}";
+		bdao.queryByDSL(JSON.parseObject(str));
 	}
 
 	@Test
 	public void testEs() {
-		String log4jPath = "props/log4j.properties";
-		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
-
 		// 插入
 		// Felicity felicity = new Felicity();
 		// felicity.setAge(44);
@@ -70,7 +85,21 @@ public class TestJSON {
 		// String str = "{\"query\" : {\"match\" : {\"content\" : \"首席记者\"}}}";
 		// aDao.queryByDSL(JSON.parseObject(str));
 
-		aDao.deleteById("AWEzI5O0g7H2InaNY8WP");
+		// aDao.deleteById("AWEzI5O0g7H2InaNY8WP");
+
+		List<Article> dosc = new ArrayList<Article>();
+		for (int i = 0; i < 3; i++) {
+			Article t = new Article();
+			t.setAuthor("a");
+			t.setContent("b");
+			t.setId(i + 10);
+			t.setPubdate(new Date());
+			t.setSource("c");
+			t.setTitle("d");
+			t.setUrl("f");
+			dosc.add(t);
+		}
+		aDao.bulkInsert(dosc);
 
 	}
 }
