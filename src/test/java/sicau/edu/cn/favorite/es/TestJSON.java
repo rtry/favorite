@@ -1,4 +1,4 @@
-package sicau.edu.cn.favorite;
+package sicau.edu.cn.favorite.es;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,11 +8,10 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 
+import sicau.edu.cn.favorite.AppClient;
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.es.EsPage;
 import sicau.edu.cn.favorite.es.browser.BookmarkDao;
-import sicau.edu.cn.favorite.es.test.Article;
-import sicau.edu.cn.favorite.es.test.ArticleDocDao;
 
 import com.alibaba.fastjson.JSON;
 

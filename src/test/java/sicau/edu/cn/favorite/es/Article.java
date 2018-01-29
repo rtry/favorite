@@ -1,4 +1,4 @@
-package sicau.edu.cn.favorite.es.test;
+package sicau.edu.cn.favorite.es;
 
 import java.util.Date;
 
