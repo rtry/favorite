@@ -7,7 +7,9 @@
  */
 package sicau.edu.cn.favorite.es;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.EntityBuilder;
@@ -24,6 +26,7 @@ import org.apache.log4j.Logger;
 import sicau.edu.cn.favorite.util.ThirdHttpHelper;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -52,7 +55,7 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 	String baseUrl = esUrl + "/" + getIndex() + "/" + getType();
 
 	@Override
-	public String queryByDSL(JSONObject query) {
+	public List<T> queryByDSL(JSONObject query) {
 		String url = baseUrl + "/_search";
 		String result = "";
 		String json = query.toJSONString();
@@ -70,7 +73,21 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 		}
 		log.info("invoke es query result = " + result);
 		log.info("------------------------------------------------------------------------");
-		return result;
+		JSONObject rt = JSON.parseObject(result);
+		if (rt.containsKey("error"))
+			return null;
+		JSONObject hits = rt.getJSONObject("hits");
+		JSONArray hitsArray = hits.getJSONArray("hits");
+		List<T> rts = new ArrayList<T>();
+		for (int i = 0; i < hitsArray.size(); i++) {
+			JSONObject temp = hitsArray.getJSONObject(i);
+			String id = temp.getString("_id");
+			System.out.println(id);
+			temp.getJSONObject("_source").put("id", id);
+			T t = temp.getObject("_source", getClazz());
+			rts.add(t);
+		}
+		return rts;
 	}
 
 	@Override
@@ -101,7 +118,7 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 	}
 
 	@Override
-	public T getById(String id, Class<T> t) {
+	public T getById(String id) {
 		String url = baseUrl + "/" + id;
 		HttpGet httpGet = new HttpGet(url);
 		String result = "";
@@ -115,7 +132,7 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 		}
 		log.info("invoke es getById result = " + result);
 		log.info("------------------------------------------------------------------------");
-		return JSON.parseObject(result).getObject("_source", t);
+		return JSON.parseObject(result).getObject("_source", getClazz());
 	}
 
 	@Override
@@ -137,8 +154,49 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 	}
 
 	@Override
-	public EsPage<T> getListByDSL(JSONObject query) {
-		return null;
+	public EsPage<T> getPageListByDSL(JSONObject query) {
+		String url = baseUrl + "/_search";
+		String result = "";
+		int from = query.getIntValue("from");
+		int size = query.getIntValue("size");
+		String json = query.toJSONString();
+		HttpPost httpPost = new HttpPost(url);
+		EntityBuilder entityBuilder = EntityBuilder.create().setText(json)
+				.setContentType(requestContentType);
+		httpPost.setEntity(entityBuilder.build());
+		try {
+			CloseableHttpResponse resp = httpClient.execute(httpPost);
+			HttpEntity entity = resp.getEntity();
+			result = EntityUtils.toString(entity, CHARSET);
+			resp.close();
+		} catch (Exception e) {
+			log.error("invoke third api error", e);
+		}
+		log.info("invoke es query result = " + result);
+		JSONObject rt = JSON.parseObject(result);
+		EsPage<T> pages = new EsPage<T>();
+		if (rt.containsKey("error"))
+			return pages;
+
+		JSONObject hits = rt.getJSONObject("hits");
+		int totalNums = hits.getIntValue("total");
+		pages.setTotalNums(totalNums);
+		pages.setCurrentPage(from / size);
+		pages.setHasNext((from + size) < totalNums);
+		pages.setTotalPages(Math.round(totalNums / size));
+		JSONArray hitsArray = hits.getJSONArray("hits");
+		List<T> rts = new ArrayList<T>();
+		for (int i = 0; i < hitsArray.size(); i++) {
+			JSONObject temp = hitsArray.getJSONObject(i);
+			String id = temp.getString("_id");
+			System.out.println(id);
+			temp.getJSONObject("_source").put("id", id);
+			T t = temp.getObject("_source", getClazz());
+			rts.add(t);
+		}
+		pages.setResults(rts);
+		log.info("------------------------------------------------------------------------");
+		return pages;
 	}
 
 	@Override

@@ -24,16 +24,16 @@ public class EsPage<T> {
 
 	private List<T> results;
 
-	private boolean hasNext;
+	private boolean hasNext = false;
 
 	// 总条数
-	private int totalNums;
+	private int totalNums = 0;
 
 	// 总页数
-	private int totalPages;
+	private int totalPages = 0;
 
 	// 当前页
-	private int currentPage;
+	private int currentPage = 0;
 
 	public int getTotalNums() {
 		return totalNums;

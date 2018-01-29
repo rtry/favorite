@@ -8,6 +8,8 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 
+import sicau.edu.cn.favorite.browser.entry.Bookmark;
+import sicau.edu.cn.favorite.es.EsPage;
 import sicau.edu.cn.favorite.es.browser.BookmarkDao;
 import sicau.edu.cn.favorite.es.test.Article;
 import sicau.edu.cn.favorite.es.test.ArticleDocDao;
@@ -32,8 +34,11 @@ public class TestJSON {
 		// Chrome c = new Chrome();
 		// List<Bookmark> rt = c.getBookmarks();
 		// bdao.bulkInsert(rt);
-		String str = "{\"query\" : {\"match\" : {\"name\" : \"spring\"}}}";
-		bdao.queryByDSL(JSON.parseObject(str));
+		String str = "{\"query\" : {\"match\" : {\"name\" : \"spring\"}}, \"from\": 0,\"size\": 3}";
+		List<Bookmark> rr = bdao.queryByDSL(JSON.parseObject(str));
+		EsPage<Bookmark> bs = bdao.getPageListByDSL(JSON.parseObject(str));
+		System.out.println(JSON.toJSONString(rr));
+		System.out.println(JSON.toJSONString(bs));
 	}
 
 	@Test
@@ -82,7 +87,8 @@ public class TestJSON {
 
 		// 首席记者
 		// 新查询2
-		// String str = "{\"query\" : {\"match\" : {\"content\" : \"首席记者\"}}}";
+		// String str =
+		// "{\"query\" : {\"match\" : {\"content\" : \"spring\"}}}";
 		// aDao.queryByDSL(JSON.parseObject(str));
 
 		// aDao.deleteById("AWEzI5O0g7H2InaNY8WP");

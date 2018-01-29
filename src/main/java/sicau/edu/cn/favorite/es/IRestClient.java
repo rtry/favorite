@@ -26,21 +26,24 @@ import com.alibaba.fastjson.JSONObject;
 public interface IRestClient<T> {
 
 	// 查询
-	String queryByDSL(JSONObject query);
+	List<T> queryByDSL(JSONObject query);
+
+	// 查询(分页)
+	EsPage<T> getPageListByDSL(JSONObject query);
 
 	// 新增
 	String insert(T t);
+
+	// 批量新增
+	void bulkInsert(Collection<T> cs);
 
 	// 通过ID删除
 	String deleteById(String id);
 
 	// 通过ID获取
-	T getById(String id, Class<T> t);
+	T getById(String id);
 
-	// 批量查询(分页)
-	EsPage<T> getListByDSL(JSONObject query);
-
-	// 批量插入
-	void bulkInsert(Collection<T> cs);
+	// 预设 类
+	Class<T> getClazz();
 
 }

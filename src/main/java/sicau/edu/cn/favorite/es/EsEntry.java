@@ -25,5 +25,5 @@ public abstract class EsEntry {
 
 	/** 获取要操作的type */
 	public abstract String getType();
-
+	
 }

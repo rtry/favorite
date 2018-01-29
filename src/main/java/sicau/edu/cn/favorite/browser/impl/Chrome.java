@@ -8,13 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import sicau.edu.cn.favorite.browser.Browser;
+import sicau.edu.cn.favorite.browser.entry.Bookmark;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
-import sicau.edu.cn.favorite.browser.Browser;
-import sicau.edu.cn.favorite.browser.entry.Bookmark;
-import sicau.edu.cn.favorite.util.MD5Util;
 
 public class Chrome extends Browser {
 

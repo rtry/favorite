@@ -33,4 +33,9 @@ public class BookmarkDao extends AbstractEsDao<Bookmark> {
 		return "doc";
 	}
 
+	@Override
+	public Class<Bookmark> getClazz() {
+		return Bookmark.class;
+	}
+
 }
