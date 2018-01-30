@@ -31,5 +31,6 @@ public class AppClient {
 		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
 		JettyServer.start();
 		BrowserOperation.execUrl(JettyConstant.indexUrl);
+		
 	}
 }
