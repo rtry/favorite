@@ -35,34 +35,32 @@ public class Chrome extends Browser {
 
 	@Override
 	public List<Bookmark> getBookmarks() {
-		if (bookmarks != null) {
+		// if (bookmarks != null) {
+		// return bookmarks;
+		// } else {
+		File file = new File(getBookmarksURI());
+		try {
+			FileInputStream fis = new FileInputStream(file);
+			// local file
+			int length = fis.available();
+			byte[] buffer = new byte[length];
+			fis.read(buffer);
+			fis.close();
+			JSONObject json = (JSONObject) JSON.parse(buffer);
+			JSONObject root = json.getJSONObject("roots");
+			JSONObject bars = root.getJSONObject("bookmark_bar");
+			List<Bookmark> bookmarks = new ArrayList<Bookmark>();
+			getChildren(bars, bookmarks);
+			this.bookmarks = bookmarks;
+			// other 其他书签
+			// synced 移动设备书签
 			return bookmarks;
-		} else {
-			File file = new File(getBookmarksURI());
-
-			System.out.println(file.isFile());
-			try {
-				FileInputStream fis = new FileInputStream(file);
-				// local file
-				int length = fis.available();
-				byte[] buffer = new byte[length];
-				fis.read(buffer);
-				fis.close();
-				JSONObject json = (JSONObject) JSON.parse(buffer);
-				JSONObject root = json.getJSONObject("roots");
-				JSONObject bars = root.getJSONObject("bookmark_bar");
-				List<Bookmark> bookmarks = new ArrayList<Bookmark>();
-				getChildren(bars, bookmarks);
-				this.bookmarks = bookmarks;
-				// other 其他书签
-				// synced 移动设备书签
-				return bookmarks;
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		// }
 		return null;
 	}
 

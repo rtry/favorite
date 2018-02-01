@@ -12,6 +12,7 @@ import sicau.edu.cn.favorite.AppClient;
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.es.EsPage;
 import sicau.edu.cn.favorite.es.browser.BookmarkDao;
+import sicau.edu.cn.favorite.task.InitDataTask;
 
 import com.alibaba.fastjson.JSON;
 
@@ -23,6 +24,11 @@ public class TestJSON {
 		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
 	}
 
+	@Test
+	public void testInt() {
+		InitDataTask t = new InitDataTask();
+		t.init();
+	}
 	/**
 	 * testJJ 测试Chrome的收藏标签
 	 * @Exception 异常描述
@@ -33,7 +39,8 @@ public class TestJSON {
 		// Chrome c = new Chrome();
 		// List<Bookmark> rt = c.getBookmarks();
 		// bdao.bulkInsert(rt);
-		String str = "{\"query\" : {\"match\" : {\"name\" : \"spring\"}}, \"from\": 0,\"size\": 11}";
+		String str = "{\"query\" : {\"match\" : {\"name\" : \"spring\"}}, \"from\": 0,\"size\": 11,\"sort\" : [{\"createtime\": \"desc\"}]}";	
+		String q1 = "{\"query\" : {\"bool\" : {\"must\": [{\"match_all\" : {}}]}}, \"from\": 0,\"size\": 11,\"sort\" : [{\"createtime\": \"desc\"}]}";	
 		List<Bookmark> rr = bdao.queryByDSL(JSON.parseObject(str));
 		EsPage<Bookmark> bs = bdao.getPageListByDSL(JSON.parseObject(str));
 		System.out.println(JSON.toJSONString(rr));

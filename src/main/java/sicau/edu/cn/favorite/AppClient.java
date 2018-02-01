@@ -7,11 +7,17 @@
  */
 package sicau.edu.cn.favorite;
 
+import java.util.List;
+
 import org.apache.log4j.PropertyConfigurator;
 
 import sicau.edu.cn.favorite.browser.BrowserOperation;
+import sicau.edu.cn.favorite.browser.entry.Bookmark;
+import sicau.edu.cn.favorite.browser.impl.Chrome;
 import sicau.edu.cn.favorite.constant.JettyConstant;
+import sicau.edu.cn.favorite.es.browser.BookmarkDao;
 import sicau.edu.cn.favorite.servlet.JettyServer;
+import sicau.edu.cn.favorite.task.InitDataTask;
 
 /**
  * 类名称：AppClient <br>
@@ -29,8 +35,13 @@ public class AppClient {
 	public static void main(String[] args) {
 		String log4jPath = "props/log4j.properties";
 		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
+		// 启动服务器
 		JettyServer.start();
+		// 初始化数据
+		InitDataTask task = new InitDataTask();
+		task.init();
+		// 打开游览器
 		BrowserOperation.execUrl(JettyConstant.indexUrl);
-		
+
 	}
 }

@@ -8,8 +8,16 @@
 package sicau.edu.cn.favorite.servlet;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.annotations.AnnotationConfiguration;
+import org.eclipse.jetty.plus.webapp.EnvConfiguration;
+import org.eclipse.jetty.plus.webapp.PlusConfiguration;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.Configuration;
+import org.eclipse.jetty.webapp.FragmentConfiguration;
+import org.eclipse.jetty.webapp.MetaInfConfiguration;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.webapp.WebInfConfiguration;
+import org.eclipse.jetty.webapp.WebXmlConfiguration;
 
 import sicau.edu.cn.favorite.constant.JettyConstant;
 
@@ -42,13 +50,17 @@ public class JettyServer {
 
 		// 定义服务器
 		server = new Server(JettyConstant.port);
+
 		WebAppContext context = new WebAppContext();
 		context.setContextPath(JettyConstant.urlseparator);
 		String proPath = System.getProperty("user.dir");
-
-		logger.info("项目路径：" + proPath);
-		context.setResourceBase(proPath + "/src/main/webapp");
-		context.setParentLoaderPriority(true);
+		String wardir = "target/favorite-0.0.1-SNAPSHOT";
+//		logger.info("项目路径：" + proPath);
+		context.setResourceBase(wardir);
+		context.setConfigurations(new Configuration[] { new AnnotationConfiguration(),
+				new WebXmlConfiguration(), new WebInfConfiguration(), new PlusConfiguration(),
+				new MetaInfConfiguration(), new FragmentConfiguration(), new EnvConfiguration() });
+		// context.addServlet(SearchServlet.class, "/search");
 		server.setHandler(context);
 
 		try {
