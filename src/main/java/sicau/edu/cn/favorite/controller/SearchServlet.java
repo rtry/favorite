@@ -10,20 +10,20 @@ package sicau.edu.cn.favorite.controller;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import org.apache.log4j.Logger;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.es.EsPage;
 import sicau.edu.cn.favorite.es.browser.BookmarkDao;
 import sicau.edu.cn.favorite.util.ServiceUtil;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * 类名称：SearchController <br>
@@ -36,8 +36,11 @@ import sicau.edu.cn.favorite.util.ServiceUtil;
  * @version
  * @see
  */
-@WebServlet(name = "searchFilter", urlPatterns = { "/search" })
+//@WebServlet(name = "searchFilter", urlPatterns = { "/search" })
 public class SearchServlet extends HttpServlet {
+
+	private static Logger log = Logger.getLogger(SearchServlet.class);
+
 	private static final long serialVersionUID = 1L;
 
 	private BookmarkDao bookmarkDao = new BookmarkDao();
@@ -61,7 +64,7 @@ public class SearchServlet extends HttpServlet {
 
 		String query = req.getParameter("query");
 		String qStr = "";
-		if (StringUtils.isBlank(query)) {
+		if (StringUtils.isNotBlank(query)) {
 			// 按条件查询
 			qStr = "{\"query\" : {\"match\" : {\"name\" : \"" + query + "\"}}, \"from\": "
 					+ (pageNum - 1) * pageSize + ",\"size\": " + pageSize + "}";
@@ -73,6 +76,7 @@ public class SearchServlet extends HttpServlet {
 					+ ",\"sort\" : [{\"createDate\": \"desc\"}]}";
 		}
 		JSONObject qObt = JSON.parseObject(qStr);
+		log.info(qObt);
 		EsPage<Bookmark> back = bookmarkDao.getPageListByDSL(qObt);
 		ServiceUtil.setResponseVaule(resp, ServiceUtil.returnSuccess(back));
 		return;

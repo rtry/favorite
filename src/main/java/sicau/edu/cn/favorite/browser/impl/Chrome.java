@@ -19,6 +19,7 @@ public class Chrome extends Browser {
 
 	private String name = "Google 游览器";
 
+	@SuppressWarnings("unused")
 	private List<Bookmark> bookmarks;
 
 	@Override

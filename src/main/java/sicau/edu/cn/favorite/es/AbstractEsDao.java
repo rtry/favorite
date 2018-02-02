@@ -23,8 +23,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
-import sicau.edu.cn.favorite.util.ThirdHttpHelper;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -44,7 +42,7 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 
 	private static CloseableHttpClient httpClient = HttpClients.createDefault();
 
-	private static Logger log = Logger.getLogger(ThirdHttpHelper.class);
+	private static Logger log = Logger.getLogger(AbstractEsDao.class);
 
 	private static final String CHARSET = "UTF-8";
 
