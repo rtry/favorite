@@ -27,4 +27,6 @@ public class JettyConstant {
 	public static final String indexUrl = http.concat("://").concat(localhost).concat(":")
 			.concat(port + "");
 
+	public static final String APPLICATION_JSON_VALUE = "text/html;charset=UTF-8";
+
 }

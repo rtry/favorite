@@ -82,7 +82,6 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 		for (int i = 0; i < hitsArray.size(); i++) {
 			JSONObject temp = hitsArray.getJSONObject(i);
 			String id = temp.getString("_id");
-			System.out.println(id);
 			temp.getJSONObject("_source").put("id", id);
 			T t = temp.getObject("_source", getClazz());
 			rts.add(t);
@@ -189,7 +188,6 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 		for (int i = 0; i < hitsArray.size(); i++) {
 			JSONObject temp = hitsArray.getJSONObject(i);
 			String id = temp.getString("_id");
-			System.out.println(id);
 			temp.getJSONObject("_source").put("id", id);
 			T t = temp.getObject("_source", getClazz());
 			rts.add(t);

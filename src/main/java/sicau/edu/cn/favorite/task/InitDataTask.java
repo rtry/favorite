@@ -10,11 +10,13 @@ package sicau.edu.cn.favorite.task;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.alibaba.fastjson.JSON;
+import org.apache.log4j.Logger;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.browser.impl.Chrome;
 import sicau.edu.cn.favorite.es.browser.BookmarkDao;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * 类名称：InitDataTask <br>
@@ -28,8 +30,10 @@ import sicau.edu.cn.favorite.es.browser.BookmarkDao;
  * @see
  */
 public class InitDataTask {
+	private static Logger logger = Logger.getLogger(InitDataTask.class);
 
 	public void init() {
+		logger.info("启动时初始化数据：");
 		BookmarkDao bdao = new BookmarkDao();
 		// 查询ES中最新的一条数据
 		String query = "{\"query\" : {\"bool\" : {\"must\": [{\"match_all\" : {}}]}}, \"from\": 0,\"size\": 1,\"sort\" : [{\"createDate\": \"desc\"}]}";

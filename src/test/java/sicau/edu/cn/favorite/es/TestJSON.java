@@ -39,8 +39,9 @@ public class TestJSON {
 		// Chrome c = new Chrome();
 		// List<Bookmark> rt = c.getBookmarks();
 		// bdao.bulkInsert(rt);
-		String str = "{\"query\" : {\"match\" : {\"name\" : \"spring\"}}, \"from\": 0,\"size\": 11,\"sort\" : [{\"createtime\": \"desc\"}]}";	
-		String q1 = "{\"query\" : {\"bool\" : {\"must\": [{\"match_all\" : {}}]}}, \"from\": 0,\"size\": 11,\"sort\" : [{\"createtime\": \"desc\"}]}";	
+		String str = "{\"query\" : {\"match\" : {\"name\" : \"spring\"}}, \"from\": 0,\"size\": 11}";	
+//		String str = "{\"query\" : {\"match\" : {\"name\" : \"spring\"}}, \"from\": 0,\"size\": 11,\"sort\" : [{\"createtime\": \"desc\"}]}";	
+//		String q1 = "{\"query\" : {\"bool\" : {\"must\": [{\"match_all\" : {}}]}}, \"from\": 0,\"size\": 11,\"sort\" : [{\"createtime\": \"desc\"}]}";	
 		List<Bookmark> rr = bdao.queryByDSL(JSON.parseObject(str));
 		EsPage<Bookmark> bs = bdao.getPageListByDSL(JSON.parseObject(str));
 		System.out.println(JSON.toJSONString(rr));
