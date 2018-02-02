@@ -72,11 +72,11 @@
 					<span class="icon-font" aria-hidden="true" data-icon="&#xe608;"></span>
 					<p id="itext9">胸无大志，枉活一世</p>
 				</div>
-				<div class="small git-thumb">
+				<div class="small git-thumb " id="pref">
 					<span class="icon-font" aria-hidden="true" data-icon="&#xe61c;"
 						style="font-size: 1.6em;"></span>上一页
 				</div>
-				<div class="small last code-thumb">
+				<div class="small last code-thumb " id="next">
 					<span class="icon-font" aria-hidden="true" data-icon="&#xe61e;"
 						style="font-size: 1.6em;"></span>下一页
 				</div>
@@ -107,29 +107,33 @@
 			}
 		}
 
-		$(".lock-thumb").click(
-				function() {
-					fadeDashBoard();
-					$('.login-screen').addClass('slidePageInFromLeft')
-							.removeClass('slidePageBackLeft');
-				});
-
-		var rt = '{"currentPage":0,"hasNext":true,"results":[{"createDate":13112445675722170,"id":"AWEzfEFng7H2InaNY8dt","name":"Spring：源码解读Spring IOC原理 - 牛奶、不加糖 - 博客园","url":"http://www.cnblogs.com/ITtangtang/p/3978349.html"},{"createDate":13116569013471643,"id":"AWEzfEFng7H2InaNY8fM","name":"Spring源代码解析(一）：IOC容器 - Spring - Java - ITeye论坛","url":"http://www.iteye.com/topic/86339"},{"createDate":13152276164454383,"id":"AWEzfEFng7H2InaNY8hl","name":"Tag: Spring Boot | 嘟嘟独立博客","url":"http://tengj.top/tags/Spring-Boot/"},{"createDate":13108037061340480,"id":"AWEzfEFng7H2InaNY8ct","name":"基于Spring + Spring MVC + Mybatis 高性能web构建 - code小王子 - 博客频道 - CSDN.NET","url":"http://blog.csdn.net/zoutongyuan/article/details/41379851"},{"createDate":13153915637899789,"id":"AWEzfEFng7H2InaNY8hn","name":"spring框架的XML扩展特性：让spring加载和解析你自定义的XML文件 - CSDN博客","url":"http://blog.csdn.net/aitangyong/article/details/23592789"},{"createDate":13107409812934449,"id":"AWEzfEFng7H2InaNY8cm","name":"Spring4新特性： - 曲奇 - 博客频道 - CSDN.NET","url":"http://blog.csdn.net/yangxt/article/details/19971269"},{"createDate":13116569011335735,"id":"AWEzfEFng7H2InaNY8d5","name":"Spring源代码解析(收藏) - 真大闸蟹 - 博客园","url":"http://www.cnblogs.com/dazhaxie/archive/2012/06/18/2553300.html"},{"createDate":13108636875942470,"id":"AWEzfEFng7H2InaNY8eV","name":"Spring分布式事务实现 - 一切随风 - ITeye技术网站","url":"http://log-cd.iteye.com/blog/807607"},{"createDate":13112938025331831,"id":"AWEzfEFng7H2InaNY8e3","name":"Quartz定时任务调用以及与Spring的整合 - - ITeye技术网站","url":"http://anybing.iteye.com/blog/1397963"},{"createDate":13142682263729973,"id":"AWEzfEFng7H2InaNY8gw","name":"学习Spring-Session+Redis实现session共享 - fengzp - 博客园","url":"http://www.cnblogs.com/andyfengzp/p/6434287.html"},{"createDate":13114248175233389,"id":"AWEzfEFng7H2InaNY8c0","name":"Spring多数据源分布式事务管理/springmvc+spring+atomikos[jta]+druid+mybatis - Study Notes - 博客频道 - CSDN.NET","url":"http://blog.csdn.net/typa01_kk/article/details/51190147"}],"totalNums":18,"totalPages":1}';
-
-		$('#search-button').click(function() {
-			loadDate();
-		});
-
-		function loadDate() {
+		//变量
+		var currentPage = 1;
+		var hasNext = false;
+		function loadDate(query, page) {
 			//淡出
 			fadeDashBoard();
 			//装载数据
-			var j = JSON.parse(rt);
-			var jrt = j.results;
-			var jlength = jrt.length;
-			for (var i = 1; i <= 11; i++) {
-				$("#itext" + i).text(jrt[i - 1].name);
-			}
+			$.ajax({
+				type : "GET",
+				url : "/search",
+				data : "query=" + query + "&page=" + page,
+				success : function(msg) {
+					var j = JSON.parse(msg);
+					if (j.code == 200) {
+						var jrt = j.data.results;
+						hasNext = j.data.hasNext;
+						var jlength = jrt.length;
+						for (var i = 1; i <= 11; i++) {
+							if (i <= jlength) {
+								$("#itext" + i).text(jrt[i - 1].name);
+							} else {
+								$("#itext" + i).text("^_^");
+							}
+						}
+					}
+				}
+			});
 
 			//淡入
 			setTimeout(function() {
@@ -137,6 +141,28 @@
 			}, 300);
 
 		}
+
+		//搜索按钮点击
+		$('#search-button').click(function() {
+			currentPage = 1;
+			var query = $("#queryInput").val();
+			loadDate(query, currentPage);
+		});
+
+		$("#pref").click(function() {
+			var query = $("#queryInput").val();
+			if (currentPage > 1) {
+				currentPage--;
+				loadDate(query, currentPage);
+			}
+		});
+		$("#next").click(function() {
+			var query = $("#queryInput").val();
+			if (hasNext) {
+				currentPage++;
+				loadDate(query, currentPage);
+			}
+		});
 	</script>
 
 </body>
