@@ -126,7 +126,8 @@
 						var jlength = jrt.length;
 						for (var i = 1; i <= 11; i++) {
 							if (i <= jlength) {
-								$("#itext" + i).text(jrt[i - 1].name);
+								//$("#itext" + i).text(jrt[i - 1].name);
+								$("#itext" + i).html("<a href='"+jrt[i - 1].url+"' target='_blank'>"+ jrt[i - 1].name + "</a>");
 							} else {
 								$("#itext" + i).text("^_^");
 							}
