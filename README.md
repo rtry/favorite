@@ -1,8 +1,9 @@
 # favorite
 > analysis, search and classify for Bookmarks
 
-* 集成log4j,与jetty日志	√
+* 集成log4j,处理jetty日志	√
 * 添加忽略的文件及路径		√
 * 集成es					√
-* 一个简单的UI页面		
+* 一个简单的UI页面		√
 * JSTOM自动分析
+* 搜索建议，纠错
