@@ -38,14 +38,19 @@ public class InitDataTask {
 		// 查询ES中最新的一条数据
 		String query = "{\"query\" : {\"bool\" : {\"must\": [{\"match_all\" : {}}]}}, \"from\": 0,\"size\": 1,\"sort\" : [{\"createDate\": \"desc\"}]}";
 		List<Bookmark> bms = bdao.queryByDSL(JSON.parseObject(query));
-		Bookmark lastBm = bms.get(0);
+		List<Bookmark> inserts = new ArrayList<Bookmark>();
 		Chrome c = new Chrome();
 		List<Bookmark> rt = c.getBookmarks();
-		List<Bookmark> inserts = new ArrayList<Bookmark>();
-		for (Bookmark r : rt) {
-			if (r.getCreateDate() > lastBm.getCreateDate()) {
-				inserts.add(r);
+
+		if (bms != null && bms.size() > 0) {
+			Bookmark lastBm = bms.get(0);
+			for (Bookmark r : rt) {
+				if (r.getCreateDate() > lastBm.getCreateDate()) {
+					inserts.add(r);
+				}
 			}
+		} else {
+			inserts = rt;
 		}
 		bdao.bulkInsert(inserts);
 	}
