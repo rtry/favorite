@@ -8,7 +8,7 @@
 * JSTOM自动分析
 * 搜索建议，纠错
 * 一个更简单的交互页面
-
+* 项目可开分支用不同实现
 ### 文档格式
 ```
 curl -XPUT '192.168.253.104:9200/bookmark?pretty' -H 'Content-Type: application/json' -d'

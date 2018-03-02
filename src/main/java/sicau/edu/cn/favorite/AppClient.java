@@ -28,6 +28,7 @@ import sicau.edu.cn.favorite.task.InitDataTask;
 public class AppClient {
 
 	public static void main(String[] args) {
+		
 		String log4jPath = "props/log4j.properties";
 		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
 		// 启动服务器
