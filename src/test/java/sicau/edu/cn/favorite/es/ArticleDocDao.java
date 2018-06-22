@@ -1,6 +1,6 @@
 package sicau.edu.cn.favorite.es;
 
-import sicau.edu.cn.favorite.es.AbstractEsDao;
+import sicau.edu.cn.favorite.lucene.es.AbstractEsDao;
 
 public class ArticleDocDao extends AbstractEsDao<Article> {
 

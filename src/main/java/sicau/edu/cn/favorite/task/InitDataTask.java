@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.browser.impl.Chrome;
-import sicau.edu.cn.favorite.es.browser.BookmarkDao;
+import sicau.edu.cn.favorite.lucene.es.impl.BookmarkDao;
 
 import com.alibaba.fastjson.JSON;
 

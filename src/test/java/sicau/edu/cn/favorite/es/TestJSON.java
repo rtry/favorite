@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import sicau.edu.cn.favorite.AppClient;
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
-import sicau.edu.cn.favorite.es.EsPage;
-import sicau.edu.cn.favorite.es.browser.BookmarkDao;
+import sicau.edu.cn.favorite.lucene.Page;
+import sicau.edu.cn.favorite.lucene.es.impl.BookmarkDao;
 import sicau.edu.cn.favorite.task.InitDataTask;
 
 import com.alibaba.fastjson.JSON;
@@ -43,7 +43,7 @@ public class TestJSON {
 //		String str = "{\"query\" : {\"match\" : {\"name\" : \"spring\"}}, \"from\": 0,\"size\": 11,\"sort\" : [{\"createtime\": \"desc\"}]}";	
 //		String q1 = "{\"query\" : {\"bool\" : {\"must\": [{\"match_all\" : {}}]}}, \"from\": 0,\"size\": 11,\"sort\" : [{\"createtime\": \"desc\"}]}";	
 		List<Bookmark> rr = bdao.queryByDSL(JSON.parseObject(str));
-		EsPage<Bookmark> bs = bdao.getPageListByDSL(JSON.parseObject(str));
+		Page<Bookmark> bs = bdao.getPageListByDSL(JSON.parseObject(str));
 		System.out.println(JSON.toJSONString(rr));
 		System.out.println(JSON.toJSONString(bs));
 	}

@@ -5,7 +5,7 @@
  * 日期：2018年1月26日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.es;
+package sicau.edu.cn.favorite.lucene;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,7 +29,7 @@ public interface IRestClient<T> {
 	List<T> queryByDSL(JSONObject query);
 
 	// 查询(分页)
-	EsPage<T> getPageListByDSL(JSONObject query);
+	Page<T> getPageListByDSL(JSONObject query);
 
 	// 新增
 	String insert(T t);

@@ -1,4 +1,4 @@
-package sicau.edu.cn.favorite.lucene;
+package sicau.edu.cn.favorite.es.lucene;
 
 import java.io.BufferedReader;
 import java.io.IOException;

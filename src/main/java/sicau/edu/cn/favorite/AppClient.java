@@ -31,13 +31,12 @@ public class AppClient {
 		
 		String log4jPath = "props/log4j.properties";
 		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
-		// 启动服务器
+		// 1.启动服务器
 		JettyServer.start();
-		// 初始化数据
+		// 2.初始化数据
 		InitDataTask task = new InitDataTask();
 		task.init();
-		// 打开游览器
+		// 3.打开游览器
 		BrowserOperation.execUrl(JettyConstant.indexUrl);
-
 	}
 }

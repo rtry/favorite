@@ -29,7 +29,7 @@ public class MySearch {
 		IndexSearcher searcher = new IndexSearcher(reader);
 
 		QueryParser parser = new QueryParser("des", analyzer);
-		Query query = parser.parse("1");
+		Query query = parser.parse("角色");
 
 		TopDocs results = searcher.search(query, 5);
 		ScoreDoc[] hits = results.scoreDocs;

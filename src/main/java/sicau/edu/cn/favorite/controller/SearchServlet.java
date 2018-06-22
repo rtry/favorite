@@ -18,8 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
-import sicau.edu.cn.favorite.es.EsPage;
-import sicau.edu.cn.favorite.es.browser.BookmarkDao;
+import sicau.edu.cn.favorite.lucene.Page;
+import sicau.edu.cn.favorite.lucene.es.impl.BookmarkDao;
 import sicau.edu.cn.favorite.util.ServiceUtil;
 
 import com.alibaba.fastjson.JSON;
@@ -77,7 +77,7 @@ public class SearchServlet extends HttpServlet {
 		}
 		JSONObject qObt = JSON.parseObject(qStr);
 		log.info(qObt);
-		EsPage<Bookmark> back = bookmarkDao.getPageListByDSL(qObt);
+		Page<Bookmark> back = bookmarkDao.getPageListByDSL(qObt);
 		ServiceUtil.setResponseVaule(resp, ServiceUtil.returnSuccess(back));
 		return;
 	}

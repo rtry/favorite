@@ -5,10 +5,10 @@
  * 日期：2018年1月26日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.es.browser;
+package sicau.edu.cn.favorite.lucene.es.impl;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
-import sicau.edu.cn.favorite.es.AbstractEsDao;
+import sicau.edu.cn.favorite.lucene.es.AbstractEsDao;
 
 /**
  * 类名称：BookmarkDao <br>

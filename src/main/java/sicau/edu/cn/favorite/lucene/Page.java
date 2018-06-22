@@ -1,16 +1,16 @@
 /**    
- * 文件名：EsPage.java    
+ * 文件名：Page.java    
  *    
  * 版本信息：    
  * 日期：2018年1月26日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.es;
+package sicau.edu.cn.favorite.lucene;
 
 import java.util.List;
 
 /**
- * 类名称：EsPage <br>
+ * 类名称：Page <br>
  * 类描述: 分页查询结果<br>
  * 创建人：felicity <br>
  * 创建时间：2018年1月26日 下午4:44:25 <br>
@@ -20,7 +20,7 @@ import java.util.List;
  * @version
  * @see
  */
-public class EsPage<T> {
+public class Page<T> {
 
 	private List<T> results;
 
