@@ -78,4 +78,10 @@ public class Bookmark {
 		this.createDate = createDate;
 	}
 
+	@Override
+	public String toString() {
+		return "Bookmark [id=" + id + ", name=" + name + ", url=" + url + ", createDate="
+				+ createDate + "]";
+	}
+
 }

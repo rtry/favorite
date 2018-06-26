@@ -18,8 +18,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
+import sicau.edu.cn.favorite.controller.form.SearchPageForm;
 import sicau.edu.cn.favorite.lucene.Page;
+import sicau.edu.cn.favorite.lucene.es.IRestClient;
 import sicau.edu.cn.favorite.lucene.es.impl.BookmarkDao;
+import sicau.edu.cn.favorite.lucene.local.SuperDao;
+import sicau.edu.cn.favorite.lucene.local.impl.BookmarkLocalDao;
 import sicau.edu.cn.favorite.util.ServiceUtil;
 
 import com.alibaba.fastjson.JSON;
@@ -36,16 +40,14 @@ import com.alibaba.fastjson.JSONObject;
  * @version
  * @see
  */
-//@WebServlet(name = "searchFilter", urlPatterns = { "/search" })
+// @WebServlet(name = "searchFilter", urlPatterns = { "/search" })
 public class SearchServlet extends HttpServlet {
 
 	private static Logger log = Logger.getLogger(SearchServlet.class);
 
 	private static final long serialVersionUID = 1L;
 
-	private BookmarkDao bookmarkDao = new BookmarkDao();
-
-	private final int pageSize = 11;
+	private SuperDao<Bookmark> bookmarkDao = new BookmarkLocalDao();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
@@ -64,20 +66,12 @@ public class SearchServlet extends HttpServlet {
 
 		String query = req.getParameter("query");
 		String qStr = "";
-		if (StringUtils.isNotBlank(query)) {
-			// 按条件查询
-			qStr = "{\"query\" : {\"match\" : {\"name\" : \"" + query + "\"}}, \"from\": "
-					+ (pageNum - 1) * pageSize + ",\"size\": " + pageSize + "}";
 
-		} else {
-			// 查询全部，按收录时间倒序
-			qStr = "{\"query\" : {\"bool\" : {\"must\": [{\"match_all\" : {}}]}}, \"from\": "
-					+ (pageNum - 1) * pageSize + ",\"size\": " + pageSize
-					+ ",\"sort\" : [{\"createDate\": \"desc\"}]}";
-		}
-		JSONObject qObt = JSON.parseObject(qStr);
-		log.info(qObt);
-		Page<Bookmark> back = bookmarkDao.getPageListByDSL(qObt);
+		SearchPageForm f = new SearchPageForm();
+		f.setPage(pageNum);
+		f.setQuery(qStr);
+
+		Page<Bookmark> back = bookmarkDao.getPageListByForm(f);
 		ServiceUtil.setResponseVaule(resp, ServiceUtil.returnSuccess(back));
 		return;
 	}

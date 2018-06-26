@@ -23,7 +23,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
-import sicau.edu.cn.favorite.lucene.IRestClient;
 import sicau.edu.cn.favorite.lucene.Page;
 
 import com.alibaba.fastjson.JSON;
@@ -226,4 +225,5 @@ public abstract class AbstractEsDao<T> extends EsEntry implements IRestClient<T>
 		log.info("invoke es bulkInsert result = " + result);
 		log.info("------------------------------------------------------------------------");
 	}
+
 }
