@@ -31,5 +31,11 @@ public interface ConvertDao<T> {
 	 */
 	public Document convertToDoc(T t);
 
+	/**
+	 * convertFormDoc 将存储对象转换为普通对象
+	 * @param doc
+	 * @return T 
+	 * @Exception 异常描述
+	*/
 	public T convertFormDoc(Document doc);
 }

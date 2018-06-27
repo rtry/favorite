@@ -181,7 +181,7 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 			// Bookmark b = this.convertFormDoc(doc);
 
 			Query q = IntPoint.newExactQuery("allFlag", 1);
-			Sort sort = new Sort(new SortField("createDate", SortField.Type.DOC));  
+			Sort sort = new Sort(new SortField("createDate", SortField.Type.LONG,true));  
 
 			TopDocs results = searcher.search(q, 1,sort);
 			ScoreDoc[] hits = results.scoreDocs;
