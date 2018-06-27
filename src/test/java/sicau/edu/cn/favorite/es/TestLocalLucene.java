@@ -7,8 +7,11 @@
  */
 package sicau.edu.cn.favorite.es;
 
+import org.apache.log4j.PropertyConfigurator;
+import org.junit.Before;
 import org.junit.Test;
 
+import sicau.edu.cn.favorite.AppClient;
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
 import sicau.edu.cn.favorite.lucene.local.SuperDao;
@@ -26,7 +29,11 @@ import sicau.edu.cn.favorite.lucene.local.impl.BookmarkLocalDao;
  * @see
  */
 public class TestLocalLucene {
-
+	@Before
+	public void bf() {
+		String log4jPath = "props/log4j.properties";
+		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
+	}
 	@Test
 	public void tLocal() {
 		System.out.println("xxx");

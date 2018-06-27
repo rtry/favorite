@@ -9,13 +9,16 @@ package sicau.edu.cn.favorite.lucene.local.impl;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexNotFoundException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -109,18 +112,37 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 		try {
 			IndexReader reader = DirectoryReader.open(dir);
 			IndexSearcher searcher = new IndexSearcher(reader);
-			Query query = parser.parse(f.getQuery());
 
-			TopDocs results = searcher.search(query, f.getSize());
-			ScoreDoc[] hits = results.scoreDocs;
-			int numTotalHits = Math.toIntExact(results.totalHits);
-			log.info("命中：" + numTotalHits + " 条");
-			for (ScoreDoc hit : hits) {
-				Document doc = searcher.doc(hit.doc);
-				Bookmark b = this.convertFormDoc(doc);
-				System.out.println(b);
+			List<Bookmark> rt = new ArrayList<Bookmark>();
+
+			if (f.getQuery() == null || f.getQuery().trim().equals("")) {
+				Query q = IntPoint.newExactQuery("allFlag", 1);
+				Sort sort = new Sort(new SortField("createDate", SortField.Type.LONG, true));
+
+				TopDocs results = searcher.search(q, f.getSize(), sort);
+				ScoreDoc[] hits = results.scoreDocs;
+				for (ScoreDoc hit : hits) {
+					Document doc = searcher.doc(hit.doc);
+					Bookmark b = this.convertFormDoc(doc);
+					rt.add(b);
+				}
+			} else {
+
+				Query query = parser.parse(f.getQuery());
+
+				TopDocs results = searcher.search(query, f.getSize());
+				ScoreDoc[] hits = results.scoreDocs;
+				for (ScoreDoc hit : hits) {
+					Document doc = searcher.doc(hit.doc);
+					Bookmark b = this.convertFormDoc(doc);
+					rt.add(b);
+				}
 			}
-
+			page.setHasNext(false);
+			page.setCurrentPage(1);
+			page.setResults(rt);
+			page.setTotalNums(rt.size());
+			page.setTotalPages(1);
 			reader.close();
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -156,8 +178,6 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 
 			TopDocs results = searcher.search(query, 1);
 			ScoreDoc[] hits = results.scoreDocs;
-			int numTotalHits = Math.toIntExact(results.totalHits);
-			log.info("命中：" + numTotalHits + " 条");
 			for (ScoreDoc hit : hits) {
 				Document doc = searcher.doc(hit.doc);
 				Bookmark b = this.convertFormDoc(doc);
@@ -181,17 +201,19 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 			// Bookmark b = this.convertFormDoc(doc);
 
 			Query q = IntPoint.newExactQuery("allFlag", 1);
-			Sort sort = new Sort(new SortField("createDate", SortField.Type.LONG,true));  
+			Sort sort = new Sort(new SortField("createDate", SortField.Type.LONG, true));
 
-			TopDocs results = searcher.search(q, 1,sort);
+			TopDocs results = searcher.search(q, 1, sort);
 			ScoreDoc[] hits = results.scoreDocs;
 			for (ScoreDoc hit : hits) {
 				Document doc = searcher.doc(hit.doc);
 				Bookmark b = this.convertFormDoc(doc);
-				System.out.println(b);
 				return b;
 			}
 			reader.close();
+		} catch (IndexNotFoundException e) {
+			log.error(e.getMessage());
+			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

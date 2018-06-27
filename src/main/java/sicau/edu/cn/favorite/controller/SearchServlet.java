@@ -65,11 +65,10 @@ public class SearchServlet extends HttpServlet {
 		Integer pageNum = Integer.parseInt(page);
 
 		String query = req.getParameter("query");
-		String qStr = "";
 
 		SearchPageForm f = new SearchPageForm();
 		f.setPage(pageNum);
-		f.setQuery(qStr);
+		f.setQuery(query);
 
 		Page<Bookmark> back = bookmarkDao.getPageListByForm(f);
 		ServiceUtil.setResponseVaule(resp, ServiceUtil.returnSuccess(back));

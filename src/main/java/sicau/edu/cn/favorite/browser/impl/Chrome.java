@@ -19,6 +19,8 @@ public class Chrome extends Browser {
 
 	private String name = "Google 游览器";
 
+	private static final String ID_PREF = "chrome_";
+
 	@SuppressWarnings("unused")
 	private List<Bookmark> bookmarks;
 
@@ -77,10 +79,11 @@ public class Chrome extends Browser {
 				}
 			}
 		} else if (type.equals("url")) {
+			String id = ID_PREF.concat(parent.getString("id"));
 			String url = parent.getString("url");
 			String name = parent.getString("name");
 			Long createDate = parent.getLong("date_added");
-			Bookmark bookmark = new Bookmark(name, url, createDate);
+			Bookmark bookmark = new Bookmark(id, name, url, createDate);
 			store.add(bookmark);
 		}
 	}

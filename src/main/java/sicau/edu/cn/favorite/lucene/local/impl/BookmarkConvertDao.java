@@ -20,7 +20,7 @@ import sicau.edu.cn.favorite.lucene.local.ConvertDao;
 
 /**
  * 类名称：BookmarkConvertDao <br>
- * 类描述: <br>
+ * 类描述: 类型转换 <br>
  * 创建人：felicity <br>
  * 创建时间：2018年6月26日 下午4:38:20 <br>
  * 修改人：felicity <br>
