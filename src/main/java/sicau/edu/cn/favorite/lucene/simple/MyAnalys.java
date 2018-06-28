@@ -33,7 +33,7 @@ public class MyAnalys {
 	public static void main(String[] args) {
 //		Analyzer analyzer = new StandardAnalyzer();
 		Analyzer analyzer = new IKAnalyzer();
-		List<String> rt = MyAnalys.getAnalyseResult("天下第一的武道会", analyzer);
+		List<String> rt = MyAnalys.getAnalyseResult("每当世界被邪恶入侵时", analyzer);
 		for (String str : rt) {
 			System.out.println("-- : " + str);
 		}

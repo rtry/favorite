@@ -55,5 +55,9 @@ public class TestLocalLucene {
 		f.setQuery("Java");
 		f.setSize(10);
 		bookmarkDao.getPageListByForm(f);
+		
+		
+		
+		
 	}
 }

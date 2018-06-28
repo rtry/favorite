@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
@@ -16,6 +15,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
 public class MySearch {
 
@@ -23,13 +23,13 @@ public class MySearch {
 		String indexPath = "F:\\lucene-4.10.2";
 
 		Directory dir = FSDirectory.open(Paths.get(indexPath));
-		Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = new IKAnalyzer();
 
 		IndexReader reader = DirectoryReader.open(dir);
 		IndexSearcher searcher = new IndexSearcher(reader);
 
 		QueryParser parser = new QueryParser("des", analyzer);
-		Query query = parser.parse("角色");
+		Query query = parser.parse("大地");
 
 		TopDocs results = searcher.search(query, 5);
 		ScoreDoc[] hits = results.scoreDocs;

@@ -5,7 +5,6 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -15,6 +14,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
 public class MyIndex {
 
@@ -22,13 +22,14 @@ public class MyIndex {
 		String indexPath = "F:\\lucene-4.10.2";
 		Directory dir = FSDirectory.open(Paths.get(indexPath));
 
-		Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = new IKAnalyzer();
+		// Analyzer analyzer = new StandardAnalyzer();
 
 		IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 
 		IndexWriter writer = new IndexWriter(dir, iwc);
 		iwc.setOpenMode(OpenMode.CREATE);
-		
+
 		List<Girl> gs = Girl.simple();
 		for (Girl g : gs) {
 			Document doc = new Document();

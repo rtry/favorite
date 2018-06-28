@@ -15,19 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
 import sicau.edu.cn.favorite.lucene.Page;
-import sicau.edu.cn.favorite.lucene.es.IRestClient;
-import sicau.edu.cn.favorite.lucene.es.impl.BookmarkDao;
 import sicau.edu.cn.favorite.lucene.local.SuperDao;
 import sicau.edu.cn.favorite.lucene.local.impl.BookmarkLocalDao;
 import sicau.edu.cn.favorite.util.ServiceUtil;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * 类名称：SearchController <br>
@@ -40,10 +34,7 @@ import com.alibaba.fastjson.JSONObject;
  * @version
  * @see
  */
-// @WebServlet(name = "searchFilter", urlPatterns = { "/search" })
 public class SearchServlet extends HttpServlet {
-
-	private static Logger log = Logger.getLogger(SearchServlet.class);
 
 	private static final long serialVersionUID = 1L;
 
