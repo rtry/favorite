@@ -10,11 +10,15 @@ package sicau.edu.cn.favorite.lucene.simple;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.util.Version;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 /**
@@ -31,9 +35,13 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 public class MyAnalys {
 
 	public static void main(String[] args) {
-//		Analyzer analyzer = new StandardAnalyzer();
-		Analyzer analyzer = new IKAnalyzer();
-		List<String> rt = MyAnalys.getAnalyseResult("每当世界被邪恶入侵时", analyzer);
+		// Analyzer analyzer = new StandardAnalyzer();
+		Analyzer analyzer = new IKAnalyzer(true);
+
+		// SmartChineseAnalyzer analyzer = new SmartChineseAnalyzer();
+
+		List<String> rt = MyAnalys.getAnalyseResult(
+				"lucene分析器使用分词器和过滤器构成一个“管道”，文本在流经这个管道后成为可以进入索引的最小单位", analyzer);
 		for (String str : rt) {
 			System.out.println("-- : " + str);
 		}
