@@ -10,16 +10,18 @@ package sicau.edu.cn.favorite.lucene.simple;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.util.Version;
 import org.wltea.analyzer.lucene.IKAnalyzer;
+
+import sicau.edu.cn.favorite.AppClient;
+import sicau.edu.cn.favorite.html.crawl.RequestAndResponseTool;
+import sicau.edu.cn.favorite.html.wash.HtmlHelpfulContextFactory;
+import sicau.edu.cn.favorite.html.wash.HtmlPage;
 
 /**
  * 类名称：MyAnalys <br>
@@ -35,15 +37,21 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 public class MyAnalys {
 
 	public static void main(String[] args) {
+		String log4jPath = "props/log4j.properties";
+		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
+		
 		// Analyzer analyzer = new StandardAnalyzer();
 		Analyzer analyzer = new IKAnalyzer(true);
 
 		// SmartChineseAnalyzer analyzer = new SmartChineseAnalyzer();
 
-		List<String> rt = MyAnalys.getAnalyseResult(
-				"lucene分析器使用分词器和过滤器构成一个“管道”，文本在流经这个管道后成为可以进入索引的最小单位", analyzer);
+		HtmlPage page = RequestAndResponseTool
+				.invoke("https://www.cnblogs.com/sanmubird/p/7857474.html");
+		String srt = HtmlHelpfulContextFactory.getContext(page);
+
+		List<String> rt = MyAnalys.getAnalyseResult(srt, analyzer);
 		for (String str : rt) {
-			System.out.println("-- : " + str);
+			System.out.print(" |  " + str);
 		}
 	}
 
