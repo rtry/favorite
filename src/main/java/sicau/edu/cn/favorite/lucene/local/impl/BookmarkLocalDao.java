@@ -196,9 +196,6 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 
 			IndexReader reader = DirectoryReader.open(dir);
 			IndexSearcher searcher = new IndexSearcher(reader);
-			// int count = reader.maxDoc();// 所有文档数
-			// Document doc = searcher.doc(count-1);
-			// Bookmark b = this.convertFormDoc(doc);
 
 			Query q = IntPoint.newExactQuery("allFlag", 1);
 			Sort sort = new Sort(new SortField("createDate", SortField.Type.LONG, true));

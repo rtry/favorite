@@ -19,7 +19,6 @@ public class SearchPageForm {
 
 	private String query;
 
-	
 	public int getSize() {
 		return size;
 	}

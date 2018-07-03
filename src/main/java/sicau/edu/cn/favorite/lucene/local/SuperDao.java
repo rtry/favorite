@@ -28,22 +28,22 @@ import sicau.edu.cn.favorite.lucene.Page;
 
 public interface SuperDao<T> {
 
-	// 新增
+	/** 新增 */
 	String insert(T t);
 
-	// 批量新增
+	/** 批量新增 */
 	void bulkInsert(Collection<T> cs);
 
-	// 通过ID删除
+	/** 通过ID删除 */
 	String deleteById(String id);
 
-	// 通过ID获取
+	/** 通过ID获取 */
 	T getById(String id);
 
-	// 通过最新一条
+	/** 通过最新一条 */
 	T getLast();
 
-	// 搜索
+	/** 搜索 */
 	Page<Bookmark> getPageListByForm(SearchPageForm f);
 
 }

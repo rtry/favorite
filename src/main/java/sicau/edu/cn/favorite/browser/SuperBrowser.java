@@ -22,11 +22,26 @@ import sicau.edu.cn.favorite.browser.entry.Bookmark;
  * @version
  * @see
  */
-public abstract class Browser {
+public abstract class SuperBrowser {
 
+	/**
+	 * getName 获取游览器名
+	 * @return String 游览器名
+	 * @Exception 异常描述
+	 */
 	public abstract String getName();
 
+	/**
+	 * getBookmarksURI 获取收藏夹路径存储位置
+	 * @return String 收藏夹路径存储位置
+	 * @Exception 异常描述
+	 */
 	public abstract String getBookmarksURI();
 
+	/**
+	 * getBookmarks 获取收藏夹对象集合
+	 * @return List<Bookmark> 收藏夹对象集合
+	 * @Exception 异常描述
+	 */
 	public abstract List<Bookmark> getBookmarks();
 }
