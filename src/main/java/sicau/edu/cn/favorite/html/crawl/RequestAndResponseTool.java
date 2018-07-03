@@ -19,6 +19,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
 
+import sicau.edu.cn.favorite.html.wash.BlogType;
 import sicau.edu.cn.favorite.html.wash.HtmlPage;
 
 /**
@@ -65,6 +66,12 @@ public class RequestAndResponseTool {
 		return url;
 	}
 
+	/**
+	 * invoke 请求页面
+	 * @param url 地址
+	 * @return HtmlPage 页面对象
+	 * @Exception 异常描述
+	 */
 	public static HtmlPage invoke(String url) {
 
 		HttpGet httpGet = new HttpGet(url);
@@ -87,5 +94,21 @@ public class RequestAndResponseTool {
 			log.error(e);
 		}
 		return null;
+	}
+
+	/**
+	 * getContext 获取精简后的内容（用于统计热词）
+	 * @param url 地址
+	 * @return String 简后的内容
+	 * @Exception 异常描述
+	 */
+	public static String getContext(String url) {
+		HtmlPage page = invoke(url);
+		String domainName = RequestAndResponseTool.getDomainName(url);
+		BlogType type = BlogType.getByDomainName(domainName);
+		if (type == null)
+			System.out.println("无法找到模板，不能解析");
+
+		return BlogType.helpFul(page, type);
 	}
 }

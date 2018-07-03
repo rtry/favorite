@@ -17,8 +17,6 @@ import org.junit.Test;
 
 import sicau.edu.cn.favorite.AppClient;
 import sicau.edu.cn.favorite.html.crawl.RequestAndResponseTool;
-import sicau.edu.cn.favorite.html.wash.HtmlHelpfulContextFactory;
-import sicau.edu.cn.favorite.html.wash.HtmlPage;
 
 /**
  * 类名称：JsoupHtmlTest <br>
@@ -64,18 +62,16 @@ public class JsoupHtmlTest {
 
 		String names[] = {
 
-//		"http://blog.sina.com.cn/s/blog_72ef7bea0102vvnp.html",
+		// "http://blog.sina.com.cn/s/blog_72ef7bea0102vvnp.html",
 
 		"https://www.cnblogs.com/sanmubird/p/7857474.html" };
 
 		for (String n : names) {
-			HtmlPage page = RequestAndResponseTool.invoke(n);
-			HtmlHelpfulContextFactory.getContext(page);
+			RequestAndResponseTool.getContext(n);
 		}
 		// for (String n : names) {
 		// System.out.println(RequestAndResponseTool.getDomainName(n));
 		// }
-
 
 	}
 }
