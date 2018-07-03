@@ -155,7 +155,7 @@
 					<!-- 主函数入口 -->
 					<archive>
 						<manifest>
-							<mainClass>sicau.edu.cn.favorite.JettyServer</mainClass>
+							<mainClass>sicau.edu.cn.favorite.AppClient</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
