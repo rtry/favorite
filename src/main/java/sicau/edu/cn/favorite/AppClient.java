@@ -37,6 +37,6 @@ public class AppClient {
 		InitDataTask task = new InitDataTask();
 		task.init();
 		// 3.打开游览器
-//		BrowserOperation.execUrl(JettyConstant.indexUrl);
+		BrowserOperation.execUrl(JettyConstant.indexUrl);
 	}
 }
