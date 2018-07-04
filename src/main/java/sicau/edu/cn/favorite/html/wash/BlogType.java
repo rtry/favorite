@@ -97,140 +97,144 @@ public enum BlogType {
 	public static String helpFul(HtmlPage page, BlogType type) {
 		Document doc = page.getDoc();
 		String text = null;
-		switch (type) {
-		case iteye:
-			Element iteye = doc.selectFirst("#blog_content");
-			Elements iteyeEls = iteye.select("pre");
-			iteyeEls.forEach(e -> {
-				e.remove();
-			});
-			if (iteye != null && iteye.hasText())
-				text = iteye.text();
-			break;
+		try {
+			switch (type) {
+			case iteye:
+				Element iteye = doc.selectFirst("#blog_content");
+				Elements iteyeEls = iteye.select("pre");
+				iteyeEls.forEach(e -> {
+					e.remove();
+				});
+				if (iteye != null && iteye.hasText())
+					text = iteye.text();
+				break;
 
-		case csdn:
-			Element csdn = doc.selectFirst("article");
-			Elements csdnEls = csdn.select("pre");
-			csdnEls.forEach(e -> {
-				e.remove();
-			});
-			if (csdn != null && csdn.hasText())
-				text = csdn.text();
-			break;
+			case csdn:
+				Element csdn = doc.selectFirst("article");
+				Elements csdnEls = csdn.select("pre");
+				csdnEls.forEach(e -> {
+					e.remove();
+				});
+				if (csdn != null && csdn.hasText())
+					text = csdn.text();
+				break;
 
-		case tuicool:
-			Element tuicool = doc.selectFirst(".article_body");
-			Elements tuicoolEls = tuicool.select("pre");
-			tuicoolEls.forEach(e -> {
-				e.remove();
-			});
-			if (tuicool != null && tuicool.hasText())
-				text = tuicool.text();
-			break;
+			case tuicool:
+				Element tuicool = doc.selectFirst(".article_body");
+				Elements tuicoolEls = tuicool.select("pre");
+				tuicoolEls.forEach(e -> {
+					e.remove();
+				});
+				if (tuicool != null && tuicool.hasText())
+					text = tuicool.text();
+				break;
 
-		case linuxidc:
-			Element linuxidc = doc.selectFirst("#content");
-			Elements linuxidcEls = linuxidc.select("pre");
-			linuxidcEls.forEach(e -> {
-				e.remove();
-			});
-			if (linuxidc != null && linuxidc.hasText())
-				text = linuxidc.text();
-			break;
+			case linuxidc:
+				Element linuxidc = doc.selectFirst("#content");
+				Elements linuxidcEls = linuxidc.select("pre");
+				linuxidcEls.forEach(e -> {
+					e.remove();
+				});
+				if (linuxidc != null && linuxidc.hasText())
+					text = linuxidc.text();
+				break;
 
-		case ibm:
-			Element ibm = doc.selectFirst("#ibm-content-main");
-			Elements ibmEls = ibm.select("pre");
-			ibmEls.forEach(e -> {
-				e.remove();
-			});
-			if (ibm != null && ibm.hasText())
-				text = ibm.text();
-			break;
+			case ibm:
+				Element ibm = doc.selectFirst("#ibm-content-main");
+				Elements ibmEls = ibm.select("pre");
+				ibmEls.forEach(e -> {
+					e.remove();
+				});
+				if (ibm != null && ibm.hasText())
+					text = ibm.text();
+				break;
 
-		case sina:
-			Element sina = doc.selectFirst(".articalContent");
-			Elements sinaEls = sina.select("pre");
-			sinaEls.forEach(e -> {
-				e.remove();
-			});
-			if (sina != null && sina.hasText())
-				text = sina.text();
-			break;
+			case sina:
+				Element sina = doc.selectFirst(".articalContent");
+				Elements sinaEls = sina.select("pre");
+				sinaEls.forEach(e -> {
+					e.remove();
+				});
+				if (sina != null && sina.hasText())
+					text = sina.text();
+				break;
 
-		case jb_51:
-			Element jb = doc.selectFirst("#content");
-			Elements jbEls = jb.select("pre");
-			jbEls.forEach(e -> {
-				e.remove();
-			});
-			if (jb != null && jb.hasText())
-				text = jb.text();
-			break;
+			case jb_51:
+				Element jb = doc.selectFirst("#content");
+				Elements jbEls = jb.select("pre");
+				jbEls.forEach(e -> {
+					e.remove();
+				});
+				if (jb != null && jb.hasText())
+					text = jb.text();
+				break;
 
-		case cto_51:
-			Element cto = doc.selectFirst(".zwnr");
-			Elements ctoEls = cto.select("pre");
-			ctoEls.forEach(e -> {
-				e.remove();
-			});
-			if (cto != null && cto.hasText())
-				text = cto.text();
-			break;
+			case cto_51:
+				Element cto = doc.selectFirst(".zwnr");
+				Elements ctoEls = cto.select("pre");
+				ctoEls.forEach(e -> {
+					e.remove();
+				});
+				if (cto != null && cto.hasText())
+					text = cto.text();
+				break;
 
-		case blog_163:
-			Element blog = doc.selectFirst(".nbw-blog");
-			Elements blogEls = blog.select("pre");
-			blogEls.forEach(e -> {
-				e.remove();
-			});
-			if (blog != null && blog.hasText())
-				text = blog.text();
-			break;
+			case blog_163:
+				Element blog = doc.selectFirst(".nbw-blog");
+				Elements blogEls = blog.select("pre");
+				blogEls.forEach(e -> {
+					e.remove();
+				});
+				if (blog != null && blog.hasText())
+					text = blog.text();
+				break;
 
-		case jianshu:
-			Element jianshu = doc.selectFirst(".show-content");
-			Elements jianshuEls = jianshu.select("pre");
-			jianshuEls.forEach(e -> {
-				e.remove();
-			});
-			if (jianshu != null && jianshu.hasText())
-				text = jianshu.text();
-			break;
+			case jianshu:
+				Element jianshu = doc.selectFirst(".show-content");
+				Elements jianshuEls = jianshu.select("pre");
+				jianshuEls.forEach(e -> {
+					e.remove();
+				});
+				if (jianshu != null && jianshu.hasText())
+					text = jianshu.text();
+				break;
 
-		case oschina:
-			Element oschina = doc.selectFirst("#articleContent");
-			Elements oschinaEls = oschina.select("pre");
-			oschinaEls.forEach(e -> {
-				e.remove();
-			});
-			if (oschina != null && oschina.hasText())
-				text = oschina.text();
-			break;
+			case oschina:
+				Element oschina = doc.selectFirst("#articleContent");
+				Elements oschinaEls = oschina.select("pre");
+				oschinaEls.forEach(e -> {
+					e.remove();
+				});
+				if (oschina != null && oschina.hasText())
+					text = oschina.text();
+				break;
 
-		case cnblogs:
+			case cnblogs:
 
-			Element cnblogs = doc.selectFirst(".postBody");
-			Elements cnblogsEls = cnblogs.select("pre");
-			cnblogsEls.forEach(e -> {
-				e.remove();
-			});
-			if (cnblogs != null && cnblogs.hasText())
-				text = cnblogs.text();
-			break;
+				Element cnblogs = doc.selectFirst(".postBody");
+				Elements cnblogsEls = cnblogs.select("pre");
+				cnblogsEls.forEach(e -> {
+					e.remove();
+				});
+				if (cnblogs != null && cnblogs.hasText())
+					text = cnblogs.text();
+				break;
 
-		default:
+			default:
 
-			// 全文检索
-			// Element def = doc.selectFirst("body");
-			// Elements defEls = def.select("pre");
-			// defEls.forEach(e -> {
-			// e.remove();
-			// });
-			// if (def != null && def.hasText())
-			// text = def.text();
+				// 全文检索
+				// Element def = doc.selectFirst("body");
+				// Elements defEls = def.select("pre");
+				// defEls.forEach(e -> {
+				// e.remove();
+				// });
+				// if (def != null && def.hasText())
+				// text = def.text();
 
-			break;
+				break;
+			}
+		} catch (Exception e) {
+			return null;
 		}
 
 		return text;

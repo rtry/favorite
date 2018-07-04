@@ -7,10 +7,13 @@
  */
 package sicau.edu.cn.favorite.html.crawl;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -41,6 +44,13 @@ public class RequestAndResponseTool {
 	private static CloseableHttpClient httpClient = HttpClients.createDefault();
 
 	private static Logger log = Logger.getLogger(RequestAndResponseTool.class);
+	private static RequestConfig defaultRequestConfig;
+
+	static {
+		// 超时时间
+		defaultRequestConfig = RequestConfig.custom().setSocketTimeout(5000)
+				.setConnectTimeout(5000).setConnectionRequestTimeout(5000).build();
+	}
 
 	/**
 	 * getDomainName 解析域名
@@ -76,6 +86,7 @@ public class RequestAndResponseTool {
 
 		HttpGet httpGet = new HttpGet(url);
 		try {
+			httpGet.setConfig(defaultRequestConfig);
 			CloseableHttpResponse resp = httpClient.execute(httpGet);
 
 			if (resp.getStatusLine().getStatusCode() == HttpStatus.OK_200) {
@@ -85,13 +96,14 @@ public class RequestAndResponseTool {
 				if (entity.getContentType() != null)
 					contentType = entity.getContentType().getValue();
 				HtmlPage page = new HtmlPage(body, url, contentType);
+				log.info("请求成功：" + url);
 				return page;
 			} else {
 				log.error("请求异常：" + url + " " + resp.getStatusLine());
 			}
 			resp.close();
 		} catch (Exception e) {
-			log.error(e);
+			log.error("请求异常：" + url + " " + e.getMessage());
 		}
 		return null;
 	}
@@ -104,10 +116,14 @@ public class RequestAndResponseTool {
 	 */
 	public static String getContext(String url) {
 		HtmlPage page = invoke(url);
+		if (page == null)
+			return null;
 		String domainName = RequestAndResponseTool.getDomainName(url);
 		BlogType type = BlogType.getByDomainName(domainName);
-		if (type == null)
-			System.out.println("无法找到模板，不能解析");
+		if (type == null) {
+			log.error("无法找到模板：" + url);
+			return null;
+		}
 
 		return BlogType.helpFul(page, type);
 	}

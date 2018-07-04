@@ -34,7 +34,8 @@ public class JettyServer {
 	private static Logger logger = Logger.getLogger(JettyServer.class);
 
 	/**
-	 * start 启动容器
+	 * start 启动容器<br>
+	 * 添加服务<br>
 	 * @Exception 异常描述
 	 */
 	public static void start() {

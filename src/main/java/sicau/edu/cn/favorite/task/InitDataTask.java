@@ -41,12 +41,11 @@ public class InitDataTask {
 		BookmarkLocalDao bdao = new BookmarkLocalDao();
 		// 查询最新的一条数据
 		Bookmark lastBm = bdao.getLast();
-
 		List<Bookmark> inserts = new ArrayList<Bookmark>();
 		Chrome c = new Chrome();
 		List<Bookmark> rt = c.getBookmarks();
 
-		this.test(rt);
+		// this.test(rt);
 
 		if (lastBm == null) {
 			inserts = rt;
@@ -57,6 +56,10 @@ public class InitDataTask {
 			}
 		}
 		bdao.bulkInsert(inserts);
+
+		// 构建Suggest
+		bdao.buidSuggest();
+		
 		logger.info("========================初始化数据完成...========================");
 	}
 

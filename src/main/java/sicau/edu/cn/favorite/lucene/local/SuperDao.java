@@ -9,6 +9,7 @@
 package sicau.edu.cn.favorite.lucene.local;
 
 import java.util.Collection;
+import java.util.List;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
@@ -46,4 +47,9 @@ public interface SuperDao<T> {
 	/** 搜索 */
 	Page<Bookmark> getPageListByForm(SearchPageForm f);
 
+	/** 创建搜索建议 */
+	void buidSuggest();
+
+	/** 搜索建议 */
+	List<String> lookup(String keyword);
 }

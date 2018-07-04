@@ -62,12 +62,12 @@ public class JsoupHtmlTest {
 
 		String names[] = {
 
-		// "http://blog.sina.com.cn/s/blog_72ef7bea0102vvnp.html",
+		 "https://developers.google.com/speed/docs/insights/EnableCompression",
 
-		"https://www.cnblogs.com/sanmubird/p/7857474.html" };
+		"https://blog.csdn.net/u011054333/article/details/57179999" };
 
 		for (String n : names) {
-			RequestAndResponseTool.getContext(n);
+		System.out.println(	RequestAndResponseTool.getContext(n));;
 		}
 		// for (String n : names) {
 		// System.out.println(RequestAndResponseTool.getDomainName(n));

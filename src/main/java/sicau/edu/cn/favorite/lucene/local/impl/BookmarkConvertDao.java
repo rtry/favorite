@@ -7,15 +7,19 @@
  */
 package sicau.edu.cn.favorite.lucene.local.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.document.NumericDocValuesField;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.IndexOptions;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
+import sicau.edu.cn.favorite.html.crawl.RequestAndResponseTool;
 import sicau.edu.cn.favorite.lucene.local.ConvertDao;
 
 /**
@@ -38,12 +42,24 @@ public abstract class BookmarkConvertDao implements ConvertDao<Bookmark> {
 		Field id = new StringField("id", b.getId(), Field.Store.YES);
 		Field name = new TextField("name", b.getName(), Field.Store.YES);
 		Field url = new StringField("url", b.getUrl(), Field.Store.YES);
+
 		// 不用LongPoint StoredField 使用 NumericDocValuesField（索引，排序，不存储）
 		Field storedCreateDate = new StoredField("createDate", b.getCreateDate());
+
 		// createDate 再用一个存储的字段
 		Field createDate = new NumericDocValuesField("createDate", b.getCreateDate());
+
 		// allFlag 便于查询全部，索引，不存储
-		Field allFlag = new IntPoint("allFlag", 1); // 为了方便查询全部,只索引，不存储
+		Field allFlag = new IntPoint("allFlag", 1);
+
+		FieldType type = new FieldType();
+		type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+		// 原始字符串全部被保存在索引中
+		type.setStored(true);
+		// 存储词项量
+		type.setStoreTermVectors(true);
+		// 词条化
+		type.setTokenized(true);
 
 		doc.add(id);
 		doc.add(name);
@@ -51,7 +67,15 @@ public abstract class BookmarkConvertDao implements ConvertDao<Bookmark> {
 		doc.add(storedCreateDate);
 		doc.add(createDate);
 		doc.add(allFlag);
-		System.out.println(doc);
+
+		// 网页爬虫,拉取简介
+		// synopsis
+		String synopsis = RequestAndResponseTool.getContext(b.getUrl().replace("#", ""));
+		if (StringUtils.isNotBlank(synopsis)) {
+			Field synopsisFile = new Field("synopsis", synopsis, type);
+			doc.add(synopsisFile);
+		}
+
 		return doc;
 	}
 
