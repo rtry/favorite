@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -267,15 +268,25 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 		try {
 			log.info("构建热词...");
 			// 收藏热词
-			List<String> hots = new ArrayList<String>();
+			Set<String> hots = new HashSet<String>();
 
 			// 整理
 			IndexReader reader = DirectoryReader.open(dir);
+			IndexSearcher searcher = new IndexSearcher(reader);
 			int max = reader.maxDoc();
 			int min = 0;
-			
+
 			for (int i = 0; i < max; i++) {
 				Terms terms = reader.getTermVector(i, "synopsis");
+
+				Document doc = searcher.doc(i);
+				String name = doc.get("name");
+				int idx = name.indexOf("-");
+				if (idx != -1) {
+					name = name.substring(0, idx);
+				}
+				System.out.println(":::" + name);
+				hots.add(name);
 
 				if (terms == null)
 					continue;
@@ -302,16 +313,25 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 				min++;
 				int size = sortedMap.size() > 20 ? 20 : sortedMap.size();
 				for (int j = 0; j < size; j++) {
+
+					String keyword = sortedMap.get(j).getKey();
+					// 如果是单字，不加入;
+					if (keyword.length() == 1)
+						continue;
+					// 进入搜索热词
+					hots.add(keyword);
 					System.out.print(sortedMap.get(j).getKey() + ":" + sortedMap.get(j).getValue()
 							+ " | ");
 				}
-				System.out.println("");
-				System.out.println("--------------");
+				System.out.println();
+				System.out.println("----------------------------");
 			}
 			System.out.println("------------------------max:" + max);
 			System.out.println("------------------------min:" + min);
+			for (String k : hots)
+				System.out.println(k);
 			// 构建
-			// suggester.build(new StringIterator(hots.iterator()));
+			suggester.build(new StringIterator(hots.iterator()));
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -320,10 +340,8 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 
 	@Override
 	public List<String> lookup(String keyword) {
-		AnalyzingInfixSuggester suggester;
 		try {
 			HashSet<BytesRef> contexts = new HashSet<BytesRef>();
-			suggester = new AnalyzingInfixSuggester(dir, analyzer);
 
 			List<LookupResult> results = suggester.lookup(keyword, contexts, 2, true, false);
 			for (LookupResult result : results) {
