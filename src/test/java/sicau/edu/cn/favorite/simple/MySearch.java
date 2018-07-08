@@ -1,4 +1,4 @@
-package sicau.edu.cn.favorite.lucene.simple;
+package sicau.edu.cn.favorite.simple;
 
 import java.io.IOException;
 import java.nio.file.Paths;

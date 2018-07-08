@@ -5,7 +5,7 @@
  * 日期：2018年1月22日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.browser;
+package sicau.edu.cn.favorite.util;
 
 import java.awt.Desktop;
 import java.io.IOException;

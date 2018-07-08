@@ -9,10 +9,10 @@ package sicau.edu.cn.favorite;
 
 import org.apache.log4j.PropertyConfigurator;
 
-import sicau.edu.cn.favorite.browser.BrowserOperation;
 import sicau.edu.cn.favorite.constant.JettyConstant;
 import sicau.edu.cn.favorite.servlet.JettyServer;
 import sicau.edu.cn.favorite.task.InitDataTask;
+import sicau.edu.cn.favorite.util.BrowserOperation;
 
 /**
  * 类名称：AppClient <br>

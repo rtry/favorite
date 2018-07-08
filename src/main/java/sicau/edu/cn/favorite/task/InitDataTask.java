@@ -31,14 +31,14 @@ public class InitDataTask {
 	private static Logger logger = Logger.getLogger(InitDataTask.class);
 
 	public void init() {
-		logger.info("启动时初始化数据：");
+		logger.info("========================正在初始化数据...========================");
 		BookmarkLocalDao bdao = new BookmarkLocalDao();
 		// 查询最新的一条数据
 		Bookmark lastBm = bdao.getLast();
-
 		List<Bookmark> inserts = new ArrayList<Bookmark>();
 		Chrome c = new Chrome();
 		List<Bookmark> rt = c.getBookmarks();
+
 		if (lastBm == null) {
 			inserts = rt;
 		} else {
@@ -47,6 +47,13 @@ public class InitDataTask {
 					inserts.add(r);
 			}
 		}
+		// 构建索引
 		bdao.bulkInsert(inserts);
+
+		// 构建Suggest
+		bdao.buidSuggest();
+
+		logger.info("========================初始化数据完成...========================");
 	}
+
 }

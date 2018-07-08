@@ -1,11 +1,11 @@
 /**    
- * 文件名：GirlIterator.java    
+ * 文件名：StringIterator.java    
  *    
  * 版本信息：    
  * 日期：2018年6月28日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.lucene.simple;
+package sicau.edu.cn.favorite.lucene.local.suggest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import org.apache.lucene.search.suggest.InputIterator;
 import org.apache.lucene.util.BytesRef;
 
 /**
- * 类名称：GirlIterator <br>
+ * 类名称：StringIterator <br>
  * 类描述: <br>
  * 创建人：felicity <br>
  * 创建时间：2018年6月28日 下午2:36:09 <br>
@@ -27,18 +27,14 @@ import org.apache.lucene.util.BytesRef;
  * @version
  * @see
  */
-public class GirlIterator implements InputIterator {
+public class StringIterator implements InputIterator {
 
-	private Iterator<Girl> girlIterator;
-	private Girl currentGirl;
+	private Iterator<String> suggestIterator;
+	private String currentSuggest;
 
-	private String[] sugs={
-			"1",
-			};
-	
-	public GirlIterator(Iterator<Girl> girlIterator) {
+	public StringIterator(Iterator<String> girlIterator) {
 		super();
-		this.girlIterator = girlIterator;
+		this.suggestIterator = girlIterator;
 	}
 
 	/** 设置有payload信息 */
@@ -55,11 +51,10 @@ public class GirlIterator implements InputIterator {
 
 	@Override
 	public BytesRef next() throws IOException {
-		System.out.println("next...");
-		if (girlIterator.hasNext()) {
+		if (suggestIterator.hasNext()) {
 			// 设置当前
-			currentGirl = girlIterator.next();
-			return new BytesRef(currentGirl.getDes().getBytes("UTF8"));
+			currentSuggest = suggestIterator.next();
+			return new BytesRef(currentSuggest.getBytes("UTF8"));
 		}
 		return null;
 	}
@@ -74,7 +69,7 @@ public class GirlIterator implements InputIterator {
 		try {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ObjectOutputStream out = new ObjectOutputStream(bos);
-			out.writeObject(currentGirl.getDes());
+			out.writeObject(currentSuggest);
 			out.close();
 			return new BytesRef(bos.toByteArray());
 		} catch (IOException e) {
@@ -85,15 +80,6 @@ public class GirlIterator implements InputIterator {
 	@Override
 	public Set<BytesRef> contexts() {
 		return null;
-		// try {
-		// Set<BytesRef> regions = new HashSet<BytesRef>();
-		// for (String region : currentProduct.getRegions()) {
-		// regions.add(new BytesRef(region.getBytes("UTF8")));
-		// }
-		// return regions;
-		// } catch (UnsupportedEncodingException e) {
-		// throw new RuntimeException("Couldn't convert to UTF-8");
-		// }
 	}
 
 }

@@ -8,16 +8,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import sicau.edu.cn.favorite.browser.Browser;
+import sicau.edu.cn.favorite.browser.SuperBrowser;
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-public class Chrome extends Browser {
+/**
+ * 类名称：Chrome <br>
+ * 类描述: Chrome游览器 <br>
+ * 创建人：felicity <br>
+ * 创建时间：2018年7月3日 下午4:42:00 <br>
+ * 修改人：felicity <br>
+ * 修改时间：2018年7月3日 下午4:42:00 <br>
+ * 修改备注:
+ * @version
+ * @see
+ */
+public class Chrome extends SuperBrowser {
 
-	private String name = "Google 游览器";
+	private String name = "Google Chrome 游览器";
 
 	private static final String ID_PREF = "chrome_";
 

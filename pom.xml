@@ -105,6 +105,11 @@
 			<artifactId>lucene-suggest</artifactId>
 			<version>7.3.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.11.2</version>
+		</dependency>
 
 	</dependencies>
 
@@ -150,7 +155,7 @@
 					<!-- 主函数入口 -->
 					<archive>
 						<manifest>
-							<mainClass>sicau.edu.cn.favorite.JettyServer</mainClass>
+							<mainClass>sicau.edu.cn.favorite.AppClient</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

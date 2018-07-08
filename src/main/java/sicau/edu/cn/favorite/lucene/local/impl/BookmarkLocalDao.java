@@ -11,7 +11,17 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.analysis.Analyzer;
@@ -24,6 +34,8 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.index.Terms;
+import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -33,14 +45,18 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.suggest.Lookup.LookupResult;
+import org.apache.lucene.search.suggest.analyzing.AnalyzingInfixSuggester;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.BytesRef;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
 import sicau.edu.cn.favorite.lucene.Page;
 import sicau.edu.cn.favorite.lucene.local.SuperDao;
+import sicau.edu.cn.favorite.lucene.local.suggest.StringIterator;
 
 /**
  * 类名称：BookmarkLocalDao <br>
@@ -58,13 +74,14 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 	private Analyzer analyzer;
 	private Directory dir;
 	private static Logger log = Logger.getLogger(BookmarkLocalDao.class);
+	private AnalyzingInfixSuggester suggester;
 
 	public BookmarkLocalDao() {
 		try {
 			String indexPath = "F:\\lucene-4.10.2";
 			dir = FSDirectory.open(Paths.get(indexPath));
-			analyzer = new IKAnalyzer();
-
+			analyzer = new IKAnalyzer(true);
+			suggester = new AnalyzingInfixSuggester(dir, analyzer);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -94,10 +111,39 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 			IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 			IndexWriter writer = new IndexWriter(dir, iwc);
 			iwc.setOpenMode(OpenMode.CREATE);
+
+			// 线程安全list,存放Document
+			List<Document> safeList = new Vector<Document>();
+
+			// 创建一个线程池，10线程
+			ExecutorService service = Executors.newFixedThreadPool(10);
+
+			// 主线程等待Latch 锁
+			CountDownLatch latch = new CountDownLatch(cs.size());
+
 			for (Bookmark b : cs) {
-				Document doc = this.convertToDoc(b);
+				// 线程池中线程执行逻辑
+				service.execute(() -> {
+					Document doc = this.convertToDoc(b);
+					safeList.add(doc);
+					// i--
+					latch.countDown();
+				});
+			}
+
+			// 主线程阻塞 等待所有执行完成...
+			try {
+				// await not wait
+				latch.await();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			System.out.println("-------- " + cs.size() + "|" + safeList.size());
+			for (Document doc : safeList) {
 				writer.addDocument(doc);
 			}
+
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -196,9 +242,6 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 
 			IndexReader reader = DirectoryReader.open(dir);
 			IndexSearcher searcher = new IndexSearcher(reader);
-			// int count = reader.maxDoc();// 所有文档数
-			// Document doc = searcher.doc(count-1);
-			// Bookmark b = this.convertFormDoc(doc);
 
 			Query q = IntPoint.newExactQuery("allFlag", 1);
 			Sort sort = new Sort(new SortField("createDate", SortField.Type.LONG, true));
@@ -212,8 +255,102 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 			}
 			reader.close();
 		} catch (IndexNotFoundException e) {
-			log.error(e.getMessage());
+			log.error(e);
 			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void buidSuggest() {
+		try {
+			log.info("构建热词...");
+			// 收藏热词
+			Set<String> hots = new HashSet<String>();
+
+			// 整理
+			IndexReader reader = DirectoryReader.open(dir);
+			IndexSearcher searcher = new IndexSearcher(reader);
+			int max = reader.maxDoc();
+			int min = 0;
+
+			for (int i = 0; i < max; i++) {
+				Terms terms = reader.getTermVector(i, "synopsis");
+
+				Document doc = searcher.doc(i);
+				String name = doc.get("name");
+				int idx = name.indexOf("-");
+				if (idx != -1) {
+					name = name.substring(0, idx);
+				}
+				System.out.println(":::" + name);
+				hots.add(name);
+
+				if (terms == null)
+					continue;
+				// 遍历词项
+				TermsEnum termsEnum = terms.iterator();
+				BytesRef thisTerm = null;
+				// 放词汇量
+				Map<String, Integer> map = new HashMap<String, Integer>();
+				while ((thisTerm = termsEnum.next()) != null) {
+					// 词项
+					String termText = thisTerm.utf8ToString();
+					// 通过totalTermFreq()方法获取词项频率
+					map.put(termText, (int) termsEnum.totalTermFreq());
+				}
+
+				// 按value排序
+				List<Map.Entry<String, Integer>> sortedMap = new ArrayList<Map.Entry<String, Integer>>(
+						map.entrySet());
+				Collections.sort(sortedMap, new Comparator<Map.Entry<String, Integer>>() {
+					public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+						return (o2.getValue() - o1.getValue());
+					}
+				});
+				min++;
+				int size = sortedMap.size() > 20 ? 20 : sortedMap.size();
+				for (int j = 0; j < size; j++) {
+
+					String keyword = sortedMap.get(j).getKey();
+					// 如果是单字，不加入;
+					if (keyword.length() == 1)
+						continue;
+					// 进入搜索热词
+					hots.add(keyword);
+					System.out.print(sortedMap.get(j).getKey() + ":" + sortedMap.get(j).getValue()
+							+ " | ");
+				}
+				System.out.println();
+				System.out.println("----------------------------");
+			}
+			System.out.println("------------------------max:" + max);
+			System.out.println("------------------------min:" + min);
+			for (String k : hots)
+				System.out.println(k);
+			// 构建
+			suggester.build(new StringIterator(hots.iterator()));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public List<String> lookup(String keyword) {
+		try {
+			HashSet<BytesRef> contexts = new HashSet<BytesRef>();
+
+			List<LookupResult> results = suggester.lookup(keyword, contexts, 2, true, false);
+			for (LookupResult result : results) {
+				System.out.println(result.key);
+				// 从payload中反序列化出Product对象
+				BytesRef bytesRef = result.payload;
+				System.out.println(": " + bytesRef.utf8ToString());
+			}
+			System.out.println();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
