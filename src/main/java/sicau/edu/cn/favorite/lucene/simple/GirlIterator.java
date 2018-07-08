@@ -32,6 +32,10 @@ public class GirlIterator implements InputIterator {
 	private Iterator<Girl> girlIterator;
 	private Girl currentGirl;
 
+	private String[] sugs={
+			"1",
+			};
+	
 	public GirlIterator(Iterator<Girl> girlIterator) {
 		super();
 		this.girlIterator = girlIterator;
