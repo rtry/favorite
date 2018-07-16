@@ -34,6 +34,7 @@ public class TestLocalLucene {
 		String log4jPath = "props/log4j.properties";
 		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
 	}
+
 	@Test
 	public void tLocal() {
 		System.out.println("xxx");
@@ -49,15 +50,12 @@ public class TestLocalLucene {
 		bookmarkDao.deleteById("41");
 
 		bookmarkDao.getLast();
-		
+
 		SearchPageForm f = new SearchPageForm();
 		f.setPage(1);
 		f.setQuery("Java");
 		f.setSize(10);
 		bookmarkDao.getPageListByForm(f);
-		
-		
-		
-		
+
 	}
 }
