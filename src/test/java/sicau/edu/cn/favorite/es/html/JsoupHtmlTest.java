@@ -69,7 +69,6 @@ public class JsoupHtmlTest {
 
 		for (String n : names) {
 			System.out.println(RequestAndResponseTool.getContext(n));
-			;
 		}
 		// for (String n : names) {
 		// System.out.println(RequestAndResponseTool.getDomainName(n));
