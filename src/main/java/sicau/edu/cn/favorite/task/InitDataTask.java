@@ -51,7 +51,7 @@ public class InitDataTask {
 		bdao.bulkInsert(inserts);
 
 		// 构建Suggest
-		bdao.buidSuggest();
+		// bdao.buidSuggest();
 
 		logger.info("========================初始化数据完成...========================");
 	}

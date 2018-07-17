@@ -19,7 +19,6 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import sicau.edu.cn.favorite.AppClient;
-import sicau.edu.cn.favorite.html.crawl.RequestAndResponseTool;
 
 /**
  * 类名称：MyAnalys <br>
@@ -43,12 +42,13 @@ public class MyAnalys {
 
 		// SmartChineseAnalyzer analyzer = new SmartChineseAnalyzer();
 
-		String srt = RequestAndResponseTool
-				.getContext("https://www.cnblogs.com/sanmubird/p/7857474.html");
+		// String srt = RequestAndResponseTool
+		// .getContext("https://www.cnblogs.com/sanmubird/p/7857474.html");
 
+		String srt = "常见数据结构与算法整理总结";
 		List<String> rt = MyAnalys.getAnalyseResult(srt, analyzer);
 		for (String str : rt) {
-			System.out.print(" |  " + str);
+			System.out.print(" | " + str);
 		}
 	}
 

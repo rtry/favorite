@@ -70,11 +70,12 @@ public abstract class BookmarkConvertDao implements ConvertDao<Bookmark> {
 
 		// 网页爬虫,拉取简介
 		// synopsis
-		String synopsis = RequestAndResponseTool.getContext(b.getUrl().replace("#", ""));
-		if (StringUtils.isNotBlank(synopsis)) {
-			Field synopsisFile = new Field("synopsis", synopsis, type);
-			doc.add(synopsisFile);
-		}
+		// String synopsis =
+		// RequestAndResponseTool.getContext(b.getUrl().replace("#", ""));
+		// if (StringUtils.isNotBlank(synopsis)) {
+		// Field synopsisFile = new Field("synopsis", synopsis, type);
+		// doc.add(synopsisFile);
+		// }
 
 		return doc;
 	}

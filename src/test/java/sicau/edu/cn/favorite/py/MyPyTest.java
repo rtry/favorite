@@ -7,11 +7,19 @@
  */
 package sicau.edu.cn.favorite.py;
 
+import java.util.List;
+
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.junit.Test;
+import org.wltea.analyzer.lucene.IKAnalyzer;
+import org.wltea.analyzer.py.PinyinAnalyzer;
 
 import sicau.edu.cn.favorite.BaseTest;
+import sicau.edu.cn.favorite.browser.entry.Bookmark;
+import sicau.edu.cn.favorite.browser.impl.Chrome;
+import sicau.edu.cn.favorite.simple.MyAnalys;
 
 /**
  * 类名称：MyPyTest <br>
@@ -30,9 +38,9 @@ public class MyPyTest extends BaseTest {
 
 	@Test
 	public void testPy() throws BadHanyuPinyinOutputFormatCombination {
-		String str = "长沙市长";
-		// String d1 = pinyin4jUtil.converterToSpell(str);
-		// System.out.println(d1);
+		String str = "万剑归宗";
+		String d1 = pinyin4jUtil.converterToSpell(str);
+		System.out.println(d1);
 
 		String d2 = pinyin4jUtil.converterToFirst(str);
 		System.out.println(d2);
@@ -41,6 +49,32 @@ public class MyPyTest extends BaseTest {
 
 	@Test
 	public void testPyAnalyzer() {
+		String text = "2011年3月31日，孙燕姿与相恋5年多的男友纳迪姆在新加坡登记结婚";
+		Analyzer analyzer = new PinyinAnalyzer();
+		List<String> lists = MyAnalys.getAnalyseResult(text, analyzer);
+		for (String ss : lists)
+			System.out.println(ss);
+	}
 
+	@Test
+	public void testAnalyzer() {
+		Chrome c = new Chrome();
+		List<Bookmark> rt = c.getBookmarks();
+		Analyzer analyzer = new IKAnalyzer(true);
+
+		// 处理数据
+		for (Bookmark b : rt) {
+			System.out.println("------------------");
+			String name = b.getName();
+			System.out.println("变更前：" + name);
+			if (name.indexOf("- ") != -1) {
+				String ex = name.substring(0, name.indexOf("- "));
+				System.out.println("变更后：" + ex);
+				List<String> lists = MyAnalys.getAnalyseResult(ex, analyzer);
+				for (String ss : lists)
+					System.out.println(ss);
+			}
+
+		}
 	}
 }
