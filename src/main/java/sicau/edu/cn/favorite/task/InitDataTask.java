@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.browser.impl.Chrome;
-import sicau.edu.cn.favorite.lucene.local.impl.BookmarkLocalDao;
+import sicau.edu.cn.favorite.lucene.bookmark.BookmarkDao;
 
 /**
  * 类名称：InitDataTask <br>
@@ -32,7 +32,7 @@ public class InitDataTask {
 
 	public void init() {
 		logger.info("========================正在初始化数据...========================");
-		BookmarkLocalDao bdao = new BookmarkLocalDao();
+		BookmarkDao bdao = new BookmarkDao();
 		// 查询最新的一条数据
 		Bookmark lastBm = bdao.getLast();
 		List<Bookmark> inserts = new ArrayList<Bookmark>();

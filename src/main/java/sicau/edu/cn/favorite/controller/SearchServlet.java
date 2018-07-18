@@ -19,8 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
 import sicau.edu.cn.favorite.lucene.Page;
-import sicau.edu.cn.favorite.lucene.local.SuperDao;
-import sicau.edu.cn.favorite.lucene.local.impl.BookmarkLocalDao;
+import sicau.edu.cn.favorite.lucene.base.SuperCrudDao;
+import sicau.edu.cn.favorite.lucene.bookmark.BookmarkDao;
 import sicau.edu.cn.favorite.util.ServiceUtil;
 
 /**
@@ -38,7 +38,7 @@ public class SearchServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private SuperDao<Bookmark> bookmarkDao = new BookmarkLocalDao();
+	private SuperCrudDao<Bookmark> bookmarkDao = new BookmarkDao();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,

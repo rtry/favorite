@@ -7,6 +7,7 @@
  */
 package sicau.edu.cn.favorite.py;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
@@ -19,6 +20,10 @@ import org.wltea.analyzer.py.PinyinAnalyzer;
 import sicau.edu.cn.favorite.BaseTest;
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.browser.impl.Chrome;
+import sicau.edu.cn.favorite.contacts.Contacts;
+import sicau.edu.cn.favorite.contacts.CorrespondenceRandomUtil;
+import sicau.edu.cn.favorite.lucene.bookmark.BookmarkDao;
+import sicau.edu.cn.favorite.lucene.contacts.ContactsDao;
 import sicau.edu.cn.favorite.simple.MyAnalys;
 
 /**
@@ -74,7 +79,30 @@ public class MyPyTest extends BaseTest {
 				for (String ss : lists)
 					System.out.println(ss);
 			}
-
 		}
+	}
+
+	@Test
+	public void indexContact() {
+		for (int i = 0; i < 100; i++) {
+			System.out.println(CorrespondenceRandomUtil.getContacts());
+		}
+	}
+
+	@Test
+	public void indexContactDB() {
+		ContactsDao dao = new ContactsDao();
+		List<Contacts> list = new ArrayList<Contacts>();
+		for (int i = 0; i < 100; i++) {
+			list.add(CorrespondenceRandomUtil.getContacts());
+		}
+		dao.bulkInsert(list);
+
+		BookmarkDao bdao = new BookmarkDao();
+		Chrome c = new Chrome();
+		List<Bookmark> rt = c.getBookmarks();
+		bdao.bulkInsert(rt);
+
+		System.out.println("x");
 	}
 }

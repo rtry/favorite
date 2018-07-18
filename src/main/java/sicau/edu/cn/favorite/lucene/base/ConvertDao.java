@@ -5,7 +5,7 @@
  * 日期：2018年6月26日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.lucene.local;
+package sicau.edu.cn.favorite.lucene.base;
 
 import org.apache.lucene.document.Document;
 
@@ -34,8 +34,15 @@ public interface ConvertDao<T> {
 	/**
 	 * convertFormDoc 将存储对象转换为普通对象
 	 * @param doc
-	 * @return T 
+	 * @return T
 	 * @Exception 异常描述
-	*/
+	 */
 	public T convertFormDoc(Document doc);
+
+	/**
+	 * getClazz 类名
+	 * @return String
+	 * @Exception 异常描述
+	 */
+	public Class<T> getClazz();
 }

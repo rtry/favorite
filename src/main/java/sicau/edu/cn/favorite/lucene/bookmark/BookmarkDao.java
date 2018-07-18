@@ -5,22 +5,20 @@
  * 日期：2018年6月26日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.lucene.local.impl;
+package sicau.edu.cn.favorite.lucene.bookmark;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.document.NumericDocValuesField;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
-import org.apache.lucene.index.IndexOptions;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
-import sicau.edu.cn.favorite.html.crawl.RequestAndResponseTool;
-import sicau.edu.cn.favorite.lucene.local.ConvertDao;
+import sicau.edu.cn.favorite.lucene.base.AbstractLocalDao;
 
 /**
  * 类名称：BookmarkConvertDao <br>
@@ -33,7 +31,16 @@ import sicau.edu.cn.favorite.lucene.local.ConvertDao;
  * @version
  * @see
  */
-public abstract class BookmarkConvertDao implements ConvertDao<Bookmark> {
+public class BookmarkDao extends AbstractLocalDao<Bookmark> {
+
+	@Override
+	public Analyzer getAnalyzer() {
+		return new IKAnalyzer(true);
+	}
+
+	public Class<Bookmark> getClazz() {
+		return Bookmark.class;
+	}
 
 	@Override
 	public Document convertToDoc(Bookmark b) {
@@ -43,23 +50,13 @@ public abstract class BookmarkConvertDao implements ConvertDao<Bookmark> {
 		Field name = new TextField("name", b.getName(), Field.Store.YES);
 		Field url = new StringField("url", b.getUrl(), Field.Store.YES);
 
-		// 不用LongPoint StoredField 使用 NumericDocValuesField（索引，排序，不存储）
+		// createDate 用一个存储的字段
 		Field storedCreateDate = new StoredField("createDate", b.getCreateDate());
-
-		// createDate 再用一个存储的字段
+		// 不用LongPoint StoredField 使用 NumericDocValuesField（索引，排序，不存储）
 		Field createDate = new NumericDocValuesField("createDate", b.getCreateDate());
 
-		// allFlag 便于查询全部，索引，不存储
+		// allFlag 便于查询全部（索引，不存储）
 		Field allFlag = new IntPoint("allFlag", 1);
-
-		FieldType type = new FieldType();
-		type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
-		// 原始字符串全部被保存在索引中
-		type.setStored(true);
-		// 存储词项量
-		type.setStoreTermVectors(true);
-		// 词条化
-		type.setTokenized(true);
 
 		doc.add(id);
 		doc.add(name);
@@ -68,8 +65,16 @@ public abstract class BookmarkConvertDao implements ConvertDao<Bookmark> {
 		doc.add(createDate);
 		doc.add(allFlag);
 
-		// 网页爬虫,拉取简介
-		// synopsis
+		// FieldType type = new FieldType();
+		// type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+		// // 原始字符串全部被保存在索引中
+		// type.setStored(true);
+		// // 存储词项量
+		// type.setStoreTermVectors(true);
+		// // 词条化
+		// type.setTokenized(true);
+		//
+		// // 网页爬虫,拉取简介 synopsis
 		// String synopsis =
 		// RequestAndResponseTool.getContext(b.getUrl().replace("#", ""));
 		// if (StringUtils.isNotBlank(synopsis)) {

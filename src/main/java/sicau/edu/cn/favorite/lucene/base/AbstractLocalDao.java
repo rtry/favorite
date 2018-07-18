@@ -1,11 +1,11 @@
 /**    
- * 文件名：BookmarkLocalDao.java    
+ * 文件名：AbstractLocalDao.java    
  *    
  * 版本信息：    
  * 日期：2018年6月22日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.lucene.local.impl;
+package sicau.edu.cn.favorite.lucene.base;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -50,16 +50,14 @@ import org.apache.lucene.search.suggest.analyzing.AnalyzingInfixSuggester;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.BytesRef;
-import org.wltea.analyzer.lucene.IKAnalyzer;
 
-import sicau.edu.cn.favorite.browser.entry.Bookmark;
+import sicau.edu.cn.favorite.constant.LuceneConstant;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
 import sicau.edu.cn.favorite.lucene.Page;
-import sicau.edu.cn.favorite.lucene.local.SuperDao;
-import sicau.edu.cn.favorite.lucene.local.suggest.StringIterator;
+import sicau.edu.cn.favorite.lucene.base.suggest.StringIterator;
 
 /**
- * 类名称：BookmarkLocalDao <br>
+ * 类名称：AbstractLocalDao <br>
  * 类描述: lucene 本地实现<br>
  * 创建人：felicity <br>
  * 创建时间：2018年6月22日 下午3:38:29 <br>
@@ -69,18 +67,21 @@ import sicau.edu.cn.favorite.lucene.local.suggest.StringIterator;
  * @version
  * @see
  */
-public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Bookmark> {
+public abstract class AbstractLocalDao<T> implements SuperCrudDao<T>, ConvertDao<T> {
 
 	private Analyzer analyzer;
 	private Directory dir;
-	private static Logger log = Logger.getLogger(BookmarkLocalDao.class);
+	private static Logger log = Logger.getLogger(AbstractLocalDao.class);
 	private AnalyzingInfixSuggester suggester;
 
-	public BookmarkLocalDao() {
+	// 可能不同的模块 需要的分词器不同
+	public abstract Analyzer getAnalyzer();
+
+	public AbstractLocalDao() {
 		try {
-			String indexPath = "F:\\lucene-4.10.2";
+			String indexPath = LuceneConstant.getIndexPath(getClazz().getSimpleName());
 			dir = FSDirectory.open(Paths.get(indexPath));
-			analyzer = new IKAnalyzer(true);
+			analyzer = getAnalyzer();
 			suggester = new AnalyzingInfixSuggester(dir, analyzer);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -88,24 +89,24 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 	}
 
 	@Override
-	public String insert(Bookmark b) {
+	public String insert(T t) {
 		try {
 			IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
 			IndexWriter writer = new IndexWriter(dir, iwc);
 			iwc.setOpenMode(OpenMode.CREATE);
 
-			Document doc = this.convertToDoc(b);
+			Document doc = this.convertToDoc(t);
 
 			writer.addDocument(doc);
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return b.getId();
+		return "";
 	}
 
 	@Override
-	public void bulkInsert(Collection<Bookmark> cs) {
+	public void bulkInsert(Collection<T> cs) {
 
 		try {
 			IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
@@ -121,7 +122,7 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 			// 主线程等待Latch 锁
 			CountDownLatch latch = new CountDownLatch(cs.size());
 
-			for (Bookmark b : cs) {
+			for (T b : cs) {
 				// 线程池中线程执行逻辑
 				service.execute(() -> {
 					Document doc = this.convertToDoc(b);
@@ -152,14 +153,14 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 	}
 
 	@Override
-	public Page<Bookmark> getPageListByForm(SearchPageForm f) {
-		Page<Bookmark> page = new Page<Bookmark>();
+	public Page<T> getPageListByForm(SearchPageForm f) {
+		Page<T> page = new Page<T>();
 		QueryParser parser = new QueryParser("name", analyzer);
 		try {
 			IndexReader reader = DirectoryReader.open(dir);
 			IndexSearcher searcher = new IndexSearcher(reader);
 
-			List<Bookmark> rt = new ArrayList<Bookmark>();
+			List<T> rt = new ArrayList<T>();
 
 			if (f.getQuery() == null || f.getQuery().trim().equals("")) {
 				Query q = IntPoint.newExactQuery("allFlag", 1);
@@ -169,7 +170,7 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 				ScoreDoc[] hits = results.scoreDocs;
 				for (ScoreDoc hit : hits) {
 					Document doc = searcher.doc(hit.doc);
-					Bookmark b = this.convertFormDoc(doc);
+					T b = this.convertFormDoc(doc);
 					rt.add(b);
 				}
 			} else {
@@ -180,7 +181,7 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 				ScoreDoc[] hits = results.scoreDocs;
 				for (ScoreDoc hit : hits) {
 					Document doc = searcher.doc(hit.doc);
-					Bookmark b = this.convertFormDoc(doc);
+					T b = this.convertFormDoc(doc);
 					rt.add(b);
 				}
 			}
@@ -215,7 +216,7 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 	}
 
 	@Override
-	public Bookmark getById(String id) {
+	public T getById(String id) {
 		try {
 			IndexReader reader = DirectoryReader.open(dir);
 			IndexSearcher searcher = new IndexSearcher(reader);
@@ -226,7 +227,7 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 			ScoreDoc[] hits = results.scoreDocs;
 			for (ScoreDoc hit : hits) {
 				Document doc = searcher.doc(hit.doc);
-				Bookmark b = this.convertFormDoc(doc);
+				T b = this.convertFormDoc(doc);
 				return b;
 			}
 			reader.close();
@@ -237,7 +238,7 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 	}
 
 	@Override
-	public Bookmark getLast() {
+	public T getLast() {
 		try {
 
 			IndexReader reader = DirectoryReader.open(dir);
@@ -250,7 +251,7 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 			ScoreDoc[] hits = results.scoreDocs;
 			for (ScoreDoc hit : hits) {
 				Document doc = searcher.doc(hit.doc);
-				Bookmark b = this.convertFormDoc(doc);
+				T b = this.convertFormDoc(doc);
 				return b;
 			}
 			reader.close();
@@ -356,4 +357,5 @@ public class BookmarkLocalDao extends BookmarkConvertDao implements SuperDao<Boo
 		}
 		return null;
 	}
+
 }
