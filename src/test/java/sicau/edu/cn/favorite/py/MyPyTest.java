@@ -98,10 +98,10 @@ public class MyPyTest extends BaseTest {
 		}
 		dao.bulkInsert(list);
 
-		BookmarkDao bdao = new BookmarkDao();
-		Chrome c = new Chrome();
-		List<Bookmark> rt = c.getBookmarks();
-		bdao.bulkInsert(rt);
+//		BookmarkDao bdao = new BookmarkDao();
+//		Chrome c = new Chrome();
+//		List<Bookmark> rt = c.getBookmarks();
+//		bdao.bulkInsert(rt);
 
 		System.out.println("x");
 	}

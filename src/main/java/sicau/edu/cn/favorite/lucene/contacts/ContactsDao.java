@@ -35,7 +35,7 @@ public class ContactsDao extends AbstractLocalDao<Contacts> {
 	public Document convertToDoc(Contacts b) {
 		Document doc = new Document();
 		Field name = new TextField("name", b.getName(), Field.Store.YES);
-		Field email = new StringField("email", b.getEmail(), Field.Store.YES);
+		Field email = new TextField("email", b.getEmail(), Field.Store.YES);
 		Field road = new StringField("road", b.getRoad(), Field.Store.YES);
 		Field tel = new StringField("tel", b.getTel(), Field.Store.YES);
 		Field sex = new IntPoint("sex", b.getSex());
