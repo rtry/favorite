@@ -29,8 +29,7 @@ public class MyWhitespaceAnalyzer extends Analyzer {
 		// Tokenizer source = new MyWhitespaceTokenizer2();
 		Tokenizer source = new MyWhitespaceTokenizer();
 		TokenStream filter = new MyLowerCaseTokenFilter(source);
-		TokenStream filter2 = new MyLowerCaseTokenFilter(filter);
-		return new TokenStreamComponents(source, filter2);
+		return new TokenStreamComponents(source, filter);
 	}
 
 }

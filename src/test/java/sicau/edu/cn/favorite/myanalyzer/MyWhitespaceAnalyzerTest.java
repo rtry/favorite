@@ -17,6 +17,7 @@ import org.wltea.analyzer.my.MyWhitespaceAnalyzer;
 import org.wltea.analyzer.py.PinyinAnalyzer;
 
 import sicau.edu.cn.favorite.BaseTest;
+import sicau.edu.cn.favorite.lucene.contacts.ContactsDao;
 import sicau.edu.cn.favorite.lucene.util.AnalyzerUtil;
 
 /**
@@ -34,16 +35,21 @@ public class MyWhitespaceAnalyzerTest extends BaseTest {
 
 	@Test
 	public void testAny() {
-		 String analyzeStr = "hi 张飞 this is a good start ";
-//		String analyzeStr = "张重飞";
+		// String analyzeStr = "hi  this is a good start ";
+		String analyzeStr = "hi  thIS IS A good start ";
 		// Analyzer analyzer = new IKAnalyzer();
 		// Analyzer analyzer = new PinyinAnalyzer();
-		Analyzer analyzer = new MyWhitespaceAnalyzer();
-		// Analyzer analyzer = new StandardAnalyzer();
+		// Analyzer analyzer = new MyWhitespaceAnalyzer();
+		Analyzer analyzer = new StandardAnalyzer();
 		// Analyzer analyzer = new IKAnalyzer();
 		List<String> rt = AnalyzerUtil.getAnalyseResult(analyzeStr, analyzer);
 		for (String s : rt)
 			System.out.print(s + "|");
-
+	}
+	
+	@Test
+	public void search(){
+		ContactsDao dao = new ContactsDao();
+		dao.getPageListByForm(f)
 	}
 }

@@ -30,7 +30,7 @@ public class PinyinTokenizer extends Tokenizer {
 	/** 忽略非汉字，将汉字按单个字进行分词 */
 	@Override
 	public boolean incrementToken() throws IOException {
-		System.out.println("单子..");
+		System.out.println("..进行单个字拆分..");
 		while (true) {
 			int c = this.input.read();
 			this.charAttr.setEmpty();

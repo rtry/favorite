@@ -10,6 +10,9 @@ package org.wltea.analyzer.py;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.ngram.NGramTokenFilter;
+import org.apache.lucene.analysis.ngram.NGramTokenizer;
+import org.apache.lucene.analysis.util.CharTokenizer;
 
 /**
  * 类名称：PinyinAnalyzer <br>
@@ -26,10 +29,11 @@ public class PinyinAnalyzer extends Analyzer {
 
 	@Override
 	protected TokenStreamComponents createComponents(String fieldName) {
-
 		Tokenizer source = new PinyinTokenizer();
-		TokenFilter result = new PinyinTokenFilter(source);
-		return new TokenStreamComponents(source, result);
+		// NGramTokenizer source = new NGramTokenizer(1,10);
+		// NGramTokenFilter filter =new NGramTokenFilter(source, 1, 10);
+		// PinyinNGramTokenFilter result = new PinyinNGramTokenFilter(source);
+		return new TokenStreamComponents(source, source);
 	}
 
 }

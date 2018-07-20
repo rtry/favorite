@@ -15,6 +15,7 @@ import java.util.List;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.wltea.analyzer.my.MyCharAttribute;
 
 /**
  * 类名称：AnalyzerUtil <br>
@@ -40,7 +41,9 @@ public class AnalyzerUtil {
 		List<String> response = new ArrayList<String>();
 		try {
 			TokenStream tokenStream = analyzer.tokenStream("content", new StringReader(analyzeStr));
-			CharTermAttribute attr = tokenStream.addAttribute(CharTermAttribute.class);
+			// CharTermAttribute attr =
+			// tokenStream.addAttribute(CharTermAttribute.class);
+			MyCharAttribute attr = tokenStream.addAttribute(MyCharAttribute.class);
 			tokenStream.reset();
 			while (tokenStream.incrementToken()) {
 				response.add(attr.toString());
