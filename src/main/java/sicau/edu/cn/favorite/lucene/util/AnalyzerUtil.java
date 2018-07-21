@@ -25,6 +25,7 @@ import org.wltea.analyzer.my.MyCharAttribute;
  * 修改人：felicity <br>
  * 修改时间：2018年7月19日 下午3:00:14 <br>
  * 修改备注:
+ * 
  * @version
  * @see
  */
@@ -32,8 +33,11 @@ public class AnalyzerUtil {
 
 	/**
 	 * getAnalyseResult 对字符串进行分词
-	 * @param analyzeStr 带分词的字符串
-	 * @param analyzer 分词器
+	 * 
+	 * @param analyzeStr
+	 *            带分词的字符串
+	 * @param analyzer
+	 *            分词器
 	 * @return List<String> 分词结果
 	 * @Exception 异常描述
 	 */
@@ -41,9 +45,9 @@ public class AnalyzerUtil {
 		List<String> response = new ArrayList<String>();
 		try {
 			TokenStream tokenStream = analyzer.tokenStream("content", new StringReader(analyzeStr));
-			// CharTermAttribute attr =
-			// tokenStream.addAttribute(CharTermAttribute.class);
-			MyCharAttribute attr = tokenStream.addAttribute(MyCharAttribute.class);
+			CharTermAttribute attr = tokenStream.addAttribute(CharTermAttribute.class);
+			// MyCharAttribute attr =
+			// tokenStream.addAttribute(MyCharAttribute.class);
 			tokenStream.reset();
 			while (tokenStream.incrementToken()) {
 				response.add(attr.toString());

@@ -36,20 +36,15 @@ public class MyWhitespaceAnalyzerTest extends BaseTest {
 	@Test
 	public void testAny() {
 		// String analyzeStr = "hi  this is a good start ";
-		String analyzeStr = "hi  thIS IS A good start ";
+		String analyzeStr = "张晓峰重";
 		// Analyzer analyzer = new IKAnalyzer();
-		// Analyzer analyzer = new PinyinAnalyzer();
+		 Analyzer analyzer = new PinyinAnalyzer();
 		// Analyzer analyzer = new MyWhitespaceAnalyzer();
-		Analyzer analyzer = new StandardAnalyzer();
-		// Analyzer analyzer = new IKAnalyzer();
+//		Analyzer analyzer = new StandardAnalyzer();
+//		 Analyzer analyzer = new IKAnalyzer(false);
 		List<String> rt = AnalyzerUtil.getAnalyseResult(analyzeStr, analyzer);
 		for (String s : rt)
 			System.out.print(s + "|");
 	}
 	
-	@Test
-	public void search(){
-		ContactsDao dao = new ContactsDao();
-//		dao.getPageListByForm(f)
-	}
 }

@@ -8,9 +8,14 @@
 package org.wltea.analyzer.py;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+
+import sicau.edu.cn.favorite.py.Pinyin4jUtil;
 
 /**
  * 类名称：PinyinTokenizer <br>
@@ -20,29 +25,59 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
  * 修改人：felicity <br>
  * 修改时间：2018年7月19日 下午4:19:26 <br>
  * 修改备注:
+ * 
  * @version
  * @see
  */
 public class PinyinTokenizer extends Tokenizer {
 
+	Pinyin4jUtil pyUtil = new Pinyin4jUtil();
+
 	CharTermAttribute charAttr = this.addAttribute(CharTermAttribute.class);
 
-	/** 忽略非汉字，将汉字按单个字进行分词 */
+	// 所有字符 緩存
+	char[] allBuffer = new char[255];
+
+	// 字符长度
+	int length = 0;
+
+	// 字符坐标
+	int curnetIndex = 0;
+
+	Iterator<String> itr;
+
 	@Override
 	public boolean incrementToken() throws IOException {
-		System.out.println("..进行单个字拆分..");
-		while (true) {
-			int c = this.input.read();
-			this.charAttr.setEmpty();
+		System.out.println("..进入分词器..");
 
-			if (c == -1)
-				return false;
-
-			if (c > 128) {
-				// 中文
-				this.charAttr.append((char) c);
-				return true;
+		// 1. 读取所有字符
+		if (length == 0) {
+			int buffer = 0;
+			while ((buffer = this.input.read()) != -1) {
+				allBuffer[length] = (char) buffer;
+				length++;
 			}
+			String py = pyUtil.converterToFirst(new String(allBuffer));
+			String[] pus = py.split(",");
+			List<String> pys = Arrays.asList(pus);
+			itr = pys.iterator();
 		}
+
+		// 2.分词第一步，单个分词
+		if (curnetIndex < length) {
+			charAttr.setEmpty();
+			charAttr.append(allBuffer[curnetIndex]);
+			curnetIndex++;
+			return true;
+		}
+
+		// 3.分词第二步，首字母
+		while (itr.hasNext()) {
+			String temp = itr.next();
+			charAttr.setEmpty();
+			charAttr.append(temp);
+			return true;
+		}
+		return false;
 	}
 }

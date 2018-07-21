@@ -30,9 +30,6 @@ public class PinyinAnalyzer extends Analyzer {
 	@Override
 	protected TokenStreamComponents createComponents(String fieldName) {
 		Tokenizer source = new PinyinTokenizer();
-		// NGramTokenizer source = new NGramTokenizer(1,10);
-		// NGramTokenFilter filter =new NGramTokenFilter(source, 1, 10);
-		// PinyinNGramTokenFilter result = new PinyinNGramTokenFilter(source);
 		return new TokenStreamComponents(source, source);
 	}
 

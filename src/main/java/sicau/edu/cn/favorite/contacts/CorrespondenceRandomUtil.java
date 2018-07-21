@@ -139,11 +139,6 @@ public class CorrespondenceRandomUtil {
 	 * @return Map<String,String>
 	 * @Exception 异常描述
 	 */
-	/**
-	 * getContacts(这里用一句话描述这个方法的作用)
-	 * @return Contacts
-	 * @Exception 异常描述
-	 */
 	public static Contacts getContacts() {
 		Contacts cs = new Contacts();
 		cs.setEmail(getEmail(6, 10));
