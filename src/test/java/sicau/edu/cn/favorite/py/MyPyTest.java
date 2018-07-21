@@ -22,7 +22,8 @@ import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.browser.impl.Chrome;
 import sicau.edu.cn.favorite.contacts.Contacts;
 import sicau.edu.cn.favorite.contacts.CorrespondenceRandomUtil;
-import sicau.edu.cn.favorite.lucene.bookmark.BookmarkDao;
+import sicau.edu.cn.favorite.controller.form.SearchPageForm;
+import sicau.edu.cn.favorite.lucene.Page;
 import sicau.edu.cn.favorite.lucene.contacts.ContactsDao;
 import sicau.edu.cn.favorite.simple.MyAnalys;
 
@@ -90,10 +91,24 @@ public class MyPyTest extends BaseTest {
 	}
 
 	@Test
+	public void searchContactDB() {
+		
+		ContactsDao dao = new ContactsDao(); 
+		SearchPageForm f = new SearchPageForm();
+		f.setPage(1);
+		f.setQuery("y");
+		f.setSize(10);
+		Page<Contacts> page = dao.getPageListByForm(f);
+		page.getResults().forEach(e->{
+			System.out.println(e);
+		});
+		
+	}
+	@Test
 	public void indexContactDB() {
 		ContactsDao dao = new ContactsDao();
 		List<Contacts> list = new ArrayList<Contacts>();
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 1; i++) {
 			list.add(CorrespondenceRandomUtil.getContacts());
 		}
 		dao.bulkInsert(list);

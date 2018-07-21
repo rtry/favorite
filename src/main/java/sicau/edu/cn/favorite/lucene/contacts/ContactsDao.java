@@ -8,12 +8,12 @@
 package sicau.edu.cn.favorite.lucene.contacts;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.wltea.analyzer.py.PinyinAnalyzer;
 
 import sicau.edu.cn.favorite.contacts.Contacts;
 import sicau.edu.cn.favorite.lucene.base.AbstractLocalDao;
@@ -59,7 +59,7 @@ public class ContactsDao extends AbstractLocalDao<Contacts> {
 		c.setEmail(doc.get("email"));
 		c.setName(doc.get("name"));
 		c.setRoad(doc.get("road"));
-		c.setSex(Integer.valueOf(doc.get("sex")));
+//		c.setSex(Integer.valueOf(doc.get("sex")));
 		c.setTel(doc.get("tel"));
 		return c;
 	}
@@ -71,7 +71,8 @@ public class ContactsDao extends AbstractLocalDao<Contacts> {
 
 	@Override
 	public Analyzer getAnalyzer() {
-		return new StandardAnalyzer();
+//		return new StandardAnalyzer();
+		return new PinyinAnalyzer();
 	}
 
 }
