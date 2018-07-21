@@ -6,12 +6,11 @@
  * Copyright Felicity Corporation 2018 版权所有   
  */
 
-package sicau.edu.cn.favorite.lucene.local;
+package sicau.edu.cn.favorite.lucene.base;
 
 import java.util.Collection;
 import java.util.List;
 
-import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
 import sicau.edu.cn.favorite.lucene.Page;
 
@@ -27,7 +26,7 @@ import sicau.edu.cn.favorite.lucene.Page;
  * @see
  */
 
-public interface SuperDao<T> {
+public interface SuperCrudDao<T> {
 
 	/** 新增 */
 	String insert(T t);
@@ -45,7 +44,7 @@ public interface SuperDao<T> {
 	T getLast();
 
 	/** 搜索 */
-	Page<Bookmark> getPageListByForm(SearchPageForm f);
+	Page<T> getPageListByForm(SearchPageForm f);
 
 	/** 创建搜索建议 */
 	void buidSuggest();

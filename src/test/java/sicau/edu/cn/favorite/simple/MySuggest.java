@@ -8,7 +8,6 @@
 package sicau.edu.cn.favorite.simple;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +22,7 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 
 /**
  * 类名称：MySuggest <br>
- * 类描述: <br>
+ * 类描述: 搜索建议<br>
  * 创建人：felicity <br>
  * 创建时间：2018年6月28日 下午2:44:17 <br>
  * 修改人：felicity <br>
@@ -45,7 +44,7 @@ public class MySuggest {
 			System.out.println(result.key);
 			// 从payload中反序列化出Product对象
 			BytesRef bytesRef = result.payload;
-			System.out.println(": "+bytesRef.utf8ToString());
+			System.out.println(": " + bytesRef.utf8ToString());
 		}
 		System.out.println();
 	}
@@ -54,7 +53,7 @@ public class MySuggest {
 		String indexPath = "F:\\lucene-4.10.2";
 
 		Directory dir = FSDirectory.open(Paths.get(indexPath));
-		Analyzer analyzer = new IKAnalyzer();
+		Analyzer analyzer = new IKAnalyzer(true);
 
 		AnalyzingInfixSuggester suggester = new AnalyzingInfixSuggester(dir, analyzer);
 		List<Girl> gs = Girl.simple();

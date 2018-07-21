@@ -28,10 +28,10 @@ public class MySearch {
 		IndexReader reader = DirectoryReader.open(dir);
 		IndexSearcher searcher = new IndexSearcher(reader);
 
-		QueryParser parser = new QueryParser("des", analyzer);
-		Query query = parser.parse("大地");
+		QueryParser parser = new QueryParser("name", analyzer);
+		Query query = parser.parse("数据结构");
 
-		TopDocs results = searcher.search(query, 5);
+		TopDocs results = searcher.search(query, 20);
 		ScoreDoc[] hits = results.scoreDocs;
 		int numTotalHits = Math.toIntExact(results.totalHits);
 		System.out.println("命中：" + numTotalHits);

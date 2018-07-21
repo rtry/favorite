@@ -28,9 +28,10 @@ import sicau.edu.cn.favorite.util.BrowserOperation;
 public class AppClient {
 
 	public static void main(String[] args) {
-		
+
 		String log4jPath = "props/log4j.properties";
 		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
+
 		// 1.启动服务器
 		JettyServer.start();
 		// 2.初始化数据
