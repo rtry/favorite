@@ -8,6 +8,7 @@
 package sicau.edu.cn.favorite;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.junit.After;
 import org.junit.Before;
 
 /**
@@ -26,5 +27,10 @@ public class BaseTest {
 	public void bf() {
 		String log4jPath = "props/log4j.properties";
 		PropertyConfigurator.configure(AppClient.class.getClassLoader().getResource(log4jPath));
+	}
+
+	@After
+	public void af() {
+		System.out.println("...执行完成...");
 	}
 }

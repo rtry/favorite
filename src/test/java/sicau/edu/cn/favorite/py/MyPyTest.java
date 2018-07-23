@@ -24,7 +24,7 @@ import sicau.edu.cn.favorite.contacts.Contacts;
 import sicau.edu.cn.favorite.contacts.CorrespondenceRandomUtil;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
 import sicau.edu.cn.favorite.lucene.Page;
-import sicau.edu.cn.favorite.lucene.contacts.ContactsDao;
+import sicau.edu.cn.favorite.lucene.contacts.impl.ContactsDao;
 import sicau.edu.cn.favorite.simple.MyAnalys;
 
 /**
@@ -44,11 +44,11 @@ public class MyPyTest extends BaseTest {
 
 	@Test
 	public void testPy() throws BadHanyuPinyinOutputFormatCombination {
-		String str = "万剑归宗";
-		String d1 = pinyin4jUtil.converterToSpell(str);
-		System.out.println(d1);
+		String str = "c万剑归宗";
+//		String d1 = pinyin4jUtil.converterToSpell(str);
+//		System.out.println(d1);
 
-		String d2 = pinyin4jUtil.converterToFirst(str);
+		String d2 = pinyin4jUtil.converterToFirst(str,false);
 		System.out.println(d2);
 
 	}
@@ -92,32 +92,29 @@ public class MyPyTest extends BaseTest {
 
 	@Test
 	public void searchContactDB() {
-		
-		ContactsDao dao = new ContactsDao(); 
+
+		ContactsDao dao = new ContactsDao();
 		SearchPageForm f = new SearchPageForm();
 		f.setPage(1);
-		f.setQuery("y");
+		f.setQuery("鲍豪");
 		f.setSize(10);
 		Page<Contacts> page = dao.getPageListByForm(f);
-		page.getResults().forEach(e->{
+		page.getResults().forEach(e -> {
 			System.out.println(e);
 		});
-		
+
 	}
+
 	@Test
 	public void indexContactDB() {
 		ContactsDao dao = new ContactsDao();
 		List<Contacts> list = new ArrayList<Contacts>();
 		for (int i = 0; i < 1; i++) {
-			list.add(CorrespondenceRandomUtil.getContacts());
+			Contacts c = CorrespondenceRandomUtil.getContacts();
+			System.out.println(c.toString());
+			list.add(c);
 		}
 		dao.bulkInsert(list);
 
-//		BookmarkDao bdao = new BookmarkDao();
-//		Chrome c = new Chrome();
-//		List<Bookmark> rt = c.getBookmarks();
-//		bdao.bulkInsert(rt);
-
-		System.out.println("x");
 	}
 }

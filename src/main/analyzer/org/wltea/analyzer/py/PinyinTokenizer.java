@@ -8,7 +8,7 @@
 package org.wltea.analyzer.py;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,6 +35,8 @@ public class PinyinTokenizer extends Tokenizer {
 
 	CharTermAttribute charAttr = this.addAttribute(CharTermAttribute.class);
 
+	StringBuffer sb = new StringBuffer();
+
 	// 所有字符 緩存
 	char[] allBuffer = new char[255];
 
@@ -55,11 +57,16 @@ public class PinyinTokenizer extends Tokenizer {
 			int buffer = 0;
 			while ((buffer = this.input.read()) != -1) {
 				allBuffer[length] = (char) buffer;
+				sb.append(allBuffer[length]);
 				length++;
 			}
-			String py = pyUtil.converterToFirst(new String(allBuffer));
+			String py = pyUtil.converterToFirst(sb.toString(),false);
 			String[] pus = py.split(",");
-			List<String> pys = Arrays.asList(pus);
+			List<String> pys = new ArrayList<String>();
+			for (String temp : pus) {
+				pys.add(temp);
+			}
+			pys.add(sb.toString());
 			itr = pys.iterator();
 		}
 

@@ -83,6 +83,17 @@ public class Pinyin4jUtil {
 	 * @Exception 异常描述
 	 */
 	public String converterToFirst(String str) {
+		return this.converterToFirst(str, true);
+	}
+
+	/**
+	 * converterToFirst 汉语获取首字母，忽略声调
+	 * @param str
+	 * @param IgnoreEnglish true-忽略，false-不忽略
+	 * @return String
+	 * @Exception 异常描述
+	 */
+	public String converterToFirst(String str, boolean IgnoreEnglish) {
 		char[] chars = str.toCharArray();
 		StringBuffer sb = new StringBuffer();
 		try {
@@ -97,6 +108,9 @@ public class Pinyin4jUtil {
 							sb.append(temp.charAt(0)).append(",");
 						sb.append(" ");
 					}
+				} else {
+					if (!IgnoreEnglish)
+						sb.append(c).append(", ");
 				}
 			}
 

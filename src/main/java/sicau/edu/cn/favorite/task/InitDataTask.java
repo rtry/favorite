@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.browser.impl.Chrome;
-import sicau.edu.cn.favorite.lucene.bookmark.BookmarkDao;
+import sicau.edu.cn.favorite.lucene.bookmark.impl.BookmarkDao;
 
 /**
  * 类名称：InitDataTask <br>

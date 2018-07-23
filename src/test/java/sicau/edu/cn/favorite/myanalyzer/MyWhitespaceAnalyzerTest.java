@@ -10,14 +10,10 @@ package sicau.edu.cn.favorite.myanalyzer;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.junit.Test;
-import org.wltea.analyzer.lucene.IKAnalyzer;
-import org.wltea.analyzer.my.MyWhitespaceAnalyzer;
 import org.wltea.analyzer.py.PinyinAnalyzer;
 
 import sicau.edu.cn.favorite.BaseTest;
-import sicau.edu.cn.favorite.lucene.contacts.ContactsDao;
 import sicau.edu.cn.favorite.lucene.util.AnalyzerUtil;
 
 /**
@@ -36,15 +32,15 @@ public class MyWhitespaceAnalyzerTest extends BaseTest {
 	@Test
 	public void testAny() {
 		// String analyzeStr = "hi  this is a good start ";
-		String analyzeStr = "张晓峰重";
+		String analyzeStr = "a张晓峰重";
 		// Analyzer analyzer = new IKAnalyzer();
-		 Analyzer analyzer = new PinyinAnalyzer();
+		Analyzer analyzer = new PinyinAnalyzer();
 		// Analyzer analyzer = new MyWhitespaceAnalyzer();
-//		Analyzer analyzer = new StandardAnalyzer();
-//		 Analyzer analyzer = new IKAnalyzer(false);
+		// Analyzer analyzer = new StandardAnalyzer();
+		// Analyzer analyzer = new IKAnalyzer(false);
 		List<String> rt = AnalyzerUtil.getAnalyseResult(analyzeStr, analyzer);
 		for (String s : rt)
 			System.out.print(s + "|");
 	}
-	
+
 }

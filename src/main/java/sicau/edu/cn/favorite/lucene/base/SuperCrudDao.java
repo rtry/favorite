@@ -1,5 +1,5 @@
 /**    
- * 文件名：SuperDao.java    
+ * 文件名：SuperCrudDao.java    
  *    
  * 版本信息：    
  * 日期：2018年6月26日    
@@ -9,13 +9,9 @@
 package sicau.edu.cn.favorite.lucene.base;
 
 import java.util.Collection;
-import java.util.List;
-
-import sicau.edu.cn.favorite.controller.form.SearchPageForm;
-import sicau.edu.cn.favorite.lucene.Page;
 
 /**
- * 类名称：SuperDao <br>
+ * 类名称：SuperCrudDao <br>
  * 类描述: local父类 <br>
  * 创建人：felicity <br>
  * 创建时间：2018年6月26日 下午2:39:34 <br>
@@ -43,12 +39,4 @@ public interface SuperCrudDao<T> {
 	/** 通过最新一条 */
 	T getLast();
 
-	/** 搜索 */
-	Page<T> getPageListByForm(SearchPageForm f);
-
-	/** 创建搜索建议 */
-	void buidSuggest();
-
-	/** 搜索建议 */
-	List<String> lookup(String keyword);
 }
