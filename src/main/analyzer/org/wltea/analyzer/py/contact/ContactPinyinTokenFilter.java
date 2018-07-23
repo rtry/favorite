@@ -1,4 +1,4 @@
-package org.wltea.analyzer.py;
+package org.wltea.analyzer.py.contact;
 
 import java.io.IOException;
 
@@ -6,11 +6,11 @@ import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
-public class PinyinTokenFilter extends TokenFilter {
+public class ContactPinyinTokenFilter extends TokenFilter {
 
 	CharTermAttribute charAttr = this.addAttribute(CharTermAttribute.class);
 
-	protected PinyinTokenFilter(TokenStream input) {
+	protected ContactPinyinTokenFilter(TokenStream input) {
 		super(input);
 	}
 

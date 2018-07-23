@@ -1,4 +1,4 @@
-package org.wltea.analyzer.my;
+package sicau.edu.cn.favorite.testAnalyzer;
 
 import org.apache.lucene.util.Attribute;
 

@@ -33,7 +33,7 @@ public class Page<T> {
 	private int totalPages = 0;
 
 	// 当前页
-	private int currentPage = 0;
+	private int currentPage = 1;
 
 	public int getTotalNums() {
 		return totalNums;
@@ -73,6 +73,12 @@ public class Page<T> {
 
 	public void setHasNext(boolean hasNext) {
 		this.hasNext = hasNext;
+	}
+
+	@Override
+	public String toString() {
+		return "Page [hasNext=" + hasNext + ", totalNums=" + totalNums + ", totalPages="
+				+ totalPages + ", currentPage=" + currentPage + "]";
 	}
 
 }

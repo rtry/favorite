@@ -141,7 +141,7 @@ public abstract class AbstractLocalDao<T> implements SuperCrudDao<T>, ConvertDao
 			for (Document doc : safeList) {
 				writer.addDocument(doc);
 			}
-
+			System.out.println("-------- " + cs.size() + "|" + safeList.size());
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -222,9 +222,10 @@ public abstract class AbstractLocalDao<T> implements SuperCrudDao<T>, ConvertDao
 	 */
 	public void consummateFile(Document doc) {
 
+		int id = ids.incrementAndGet();
 		IndexableField idFile = doc.getField("id");
 		if (idFile == null) {
-			idFile = new StringField("id", ids.incrementAndGet() + "", Field.Store.YES);
+			idFile = new StringField("id", id + "", Field.Store.YES);
 			doc.add(idFile);
 		}
 
@@ -235,6 +236,7 @@ public abstract class AbstractLocalDao<T> implements SuperCrudDao<T>, ConvertDao
 			doc.add(allFlag);
 		}
 		Long createTime = System.currentTimeMillis();
+		createTime = createTime + id;
 		IndexableField storedCreateDate = doc.getField("createDate");
 		if (storedCreateDate == null) {
 			// createDate 用一个存储的字段

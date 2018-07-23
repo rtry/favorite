@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.junit.Test;
-import org.wltea.analyzer.py.PinyinAnalyzer;
+import org.wltea.analyzer.py.contact.ContactPinyinAnalyzer;
 
 import sicau.edu.cn.favorite.BaseTest;
 import sicau.edu.cn.favorite.lucene.util.AnalyzerUtil;
@@ -34,7 +34,7 @@ public class MyWhitespaceAnalyzerTest extends BaseTest {
 		// String analyzeStr = "hi  this is a good start ";
 		String analyzeStr = "a张晓峰重";
 		// Analyzer analyzer = new IKAnalyzer();
-		Analyzer analyzer = new PinyinAnalyzer();
+		Analyzer analyzer = new ContactPinyinAnalyzer();
 		// Analyzer analyzer = new MyWhitespaceAnalyzer();
 		// Analyzer analyzer = new StandardAnalyzer();
 		// Analyzer analyzer = new IKAnalyzer(false);

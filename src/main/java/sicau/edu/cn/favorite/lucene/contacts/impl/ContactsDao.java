@@ -9,17 +9,10 @@ package sicau.edu.cn.favorite.lucene.contacts.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntPoint;
@@ -28,8 +21,6 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Terms;
-import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
@@ -38,15 +29,12 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.suggest.Lookup.LookupResult;
-import org.apache.lucene.search.suggest.analyzing.AnalyzingInfixSuggester;
-import org.apache.lucene.util.BytesRef;
+import org.wltea.analyzer.py.contact.ContactPinyinAnalyzer;
 
 import sicau.edu.cn.favorite.contacts.Contacts;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
 import sicau.edu.cn.favorite.lucene.Page;
 import sicau.edu.cn.favorite.lucene.base.AbstractLocalDao;
-import sicau.edu.cn.favorite.lucene.base.suggest.StringIterator;
 import sicau.edu.cn.favorite.lucene.contacts.IContactsDao;
 
 /**
@@ -62,13 +50,11 @@ import sicau.edu.cn.favorite.lucene.contacts.IContactsDao;
  */
 public class ContactsDao extends AbstractLocalDao<Contacts> implements IContactsDao<Contacts> {
 
-	private AnalyzingInfixSuggester suggester;
-
 	@Override
 	public Document convertToDoc(Contacts b) {
 		Document doc = new Document();
 		Field name = new TextField("name", b.getName(), Field.Store.YES);
-		Field email = new TextField("email", b.getEmail(), Field.Store.YES);
+		Field email = new StringField("email", b.getEmail(), Field.Store.YES);
 		Field road = new StringField("road", b.getRoad(), Field.Store.YES);
 		Field tel = new StringField("tel", b.getTel(), Field.Store.YES);
 		Field sex = new StoredField("sex", b.getSex());
@@ -93,6 +79,7 @@ public class ContactsDao extends AbstractLocalDao<Contacts> implements IContacts
 		c.setRoad(doc.get("road"));
 		c.setSex(Integer.valueOf(doc.get("sex")));
 		c.setTel(doc.get("tel"));
+		c.setId(doc.get("id"));
 		return c;
 	}
 
@@ -103,48 +90,66 @@ public class ContactsDao extends AbstractLocalDao<Contacts> implements IContacts
 
 	@Override
 	public Analyzer getAnalyzer() {
-		return new StandardAnalyzer();
-		// return new PinyinAnalyzer();
+		// return new StandardAnalyzer();
+		return new ContactPinyinAnalyzer();
+		// return new MyWhitespaceAnalyzer();
 	}
 
+	/** 深度分页，排序等 */
 	@Override
 	public Page<Contacts> getPageListByForm(SearchPageForm f) {
 		Page<Contacts> page = new Page<Contacts>();
-		QueryParser parser = new QueryParser("name", new WhitespaceAnalyzer());
+		page.setCurrentPage(f.getPage());
+
+		QueryParser parser = new QueryParser("name", new WhitespaceAnalyzer()); // 输入框非分词
 		try {
 			IndexReader reader = DirectoryReader.open(indexDir);
 			IndexSearcher searcher = new IndexSearcher(reader);
 
 			List<Contacts> rt = new ArrayList<Contacts>();
 
+			int index = (page.getCurrentPage() - 1) * f.getSize();
+			ScoreDoc scoreDoc = null;
+			TopDocs hits = null;
 			if (f.getQuery() == null || f.getQuery().trim().equals("")) {
-				Query q = IntPoint.newExactQuery("allFlag", 1);
+				Query query = IntPoint.newExactQuery("allFlag", 1);
+				// 反序
 				Sort sort = new Sort(new SortField("createDate", SortField.Type.LONG, true));
 
-				TopDocs results = searcher.search(q, f.getSize(), sort);
-				ScoreDoc[] hits = results.scoreDocs;
-				for (ScoreDoc hit : hits) {
-					Document doc = searcher.doc(hit.doc);
+				// 如果当前页是第一页面scoreDoc=null。
+				if (index > 0) {
+					TopDocs results = searcher.search(query, index, sort);
+					// 因为索引是从0开始所以要index-1
+					scoreDoc = results.scoreDocs[index - 1];
+				}
+
+				hits = searcher.searchAfter(scoreDoc, query, f.getSize(), sort);
+				for (int i = 0; i < hits.scoreDocs.length; i++) {
+					ScoreDoc sdoc = hits.scoreDocs[i];
+					Document doc = searcher.doc(sdoc.doc);
 					Contacts b = this.convertFormDoc(doc);
 					rt.add(b);
 				}
 			} else {
-
 				Query query = parser.parse(f.getQuery());
-
-				TopDocs results = searcher.search(query, f.getSize());
-				ScoreDoc[] hits = results.scoreDocs;
-				for (ScoreDoc hit : hits) {
-					Document doc = searcher.doc(hit.doc);
+				if (index > 0) {
+					TopDocs results = searcher.search(query, index);
+					scoreDoc = results.scoreDocs[index - 1];
+				}
+				hits = searcher.searchAfter(scoreDoc, query, f.getSize());
+				for (int i = 0; i < hits.scoreDocs.length; i++) {
+					ScoreDoc sdoc = hits.scoreDocs[i];
+					Document doc = searcher.doc(sdoc.doc);
 					Contacts b = this.convertFormDoc(doc);
 					rt.add(b);
 				}
 			}
-			page.setHasNext(false);
-			page.setCurrentPage(1);
+			int totalNum = Long.valueOf(hits.totalHits).intValue();
+			int totalPage = totalNum / f.getSize();
+			page.setHasNext(totalNum > page.getCurrentPage() * f.getSize());
 			page.setResults(rt);
-			page.setTotalNums(rt.size());
-			page.setTotalPages(1);
+			page.setTotalNums(totalNum);
+			page.setTotalPages(totalPage + 1);
 			reader.close();
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -152,99 +157,6 @@ public class ContactsDao extends AbstractLocalDao<Contacts> implements IContacts
 			e.printStackTrace();
 		}
 		return page;
-	}
-
-	@Override
-	public void buidSuggest() {
-		try {
-			log.info("构建热词...");
-			// 收藏热词
-			Set<String> hots = new HashSet<String>();
-
-			// 整理
-			IndexReader reader = DirectoryReader.open(indexDir);
-			IndexSearcher searcher = new IndexSearcher(reader);
-			int max = reader.maxDoc();
-			int min = 0;
-
-			for (int i = 0; i < max; i++) {
-				Terms terms = reader.getTermVector(i, "synopsis");
-
-				Document doc = searcher.doc(i);
-				String name = doc.get("name");
-				int idx = name.indexOf("-");
-				if (idx != -1) {
-					name = name.substring(0, idx);
-				}
-				hots.add(name);
-
-				if (terms == null)
-					continue;
-				// 遍历词项
-				TermsEnum termsEnum = terms.iterator();
-				BytesRef thisTerm = null;
-				// 放词汇量
-				Map<String, Integer> map = new HashMap<String, Integer>();
-				while ((thisTerm = termsEnum.next()) != null) {
-					// 词项
-					String termText = thisTerm.utf8ToString();
-					// 通过totalTermFreq()方法获取词项频率
-					map.put(termText, (int) termsEnum.totalTermFreq());
-				}
-
-				// 按value排序
-				List<Map.Entry<String, Integer>> sortedMap = new ArrayList<Map.Entry<String, Integer>>(
-						map.entrySet());
-				Collections.sort(sortedMap, new Comparator<Map.Entry<String, Integer>>() {
-					public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-						return (o2.getValue() - o1.getValue());
-					}
-				});
-				min++;
-				int size = sortedMap.size() > 20 ? 20 : sortedMap.size();
-				for (int j = 0; j < size; j++) {
-
-					String keyword = sortedMap.get(j).getKey();
-					// 如果是单字，不加入;
-					if (keyword.length() == 1)
-						continue;
-					// 进入搜索热词
-					hots.add(keyword);
-					System.out.print(sortedMap.get(j).getKey() + ":" + sortedMap.get(j).getValue()
-							+ " | ");
-				}
-				System.out.println();
-				System.out.println("----------------------------");
-			}
-			System.out.println("------------------------max:" + max);
-			System.out.println("------------------------min:" + min);
-			for (String k : hots)
-				System.out.println(k);
-			// 构建
-			suggester.build(new StringIterator(hots.iterator()));
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public List<String> lookup(String keyword) {
-		try {
-			HashSet<BytesRef> contexts = new HashSet<BytesRef>();
-
-			List<LookupResult> results = suggester.lookup(keyword, contexts, 2, true, false);
-			for (LookupResult result : results) {
-				System.out.println(result.key);
-				// 从payload中反序列化出Product对象
-				BytesRef bytesRef = result.payload;
-				System.out.println(": " + bytesRef.utf8ToString());
-			}
-			System.out.println();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 }

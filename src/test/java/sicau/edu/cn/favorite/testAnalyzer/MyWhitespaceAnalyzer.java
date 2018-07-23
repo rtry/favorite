@@ -5,7 +5,7 @@
  * 日期：2018年7月19日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package org.wltea.analyzer.my;
+package sicau.edu.cn.favorite.testAnalyzer;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;

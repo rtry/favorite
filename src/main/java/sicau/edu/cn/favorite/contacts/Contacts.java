@@ -20,11 +20,20 @@ package sicau.edu.cn.favorite.contacts;
  */
 public class Contacts {
 
+	private String id;
 	private String name;
 	private Integer sex;
 	private String road;
 	private String tel;
 	private String email;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -68,7 +77,7 @@ public class Contacts {
 
 	@Override
 	public String toString() {
-		return "Contacts [name=" + name + ", sex=" + sex + ", road=" + road + ", tel=" + tel
+		return "[id=" + id + ", name=" + name + ", sex=" + sex + ", road=" + road + ", tel=" + tel
 				+ ", email=" + email + "]";
 	}
 

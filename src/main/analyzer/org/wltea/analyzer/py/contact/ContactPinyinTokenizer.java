@@ -5,7 +5,7 @@
  * 日期：2018年7月19日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package org.wltea.analyzer.py;
+package org.wltea.analyzer.py.contact;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import sicau.edu.cn.favorite.py.Pinyin4jUtil;
  * @version
  * @see
  */
-public class PinyinTokenizer extends Tokenizer {
+public class ContactPinyinTokenizer extends Tokenizer {
 
 	Pinyin4jUtil pyUtil = new Pinyin4jUtil();
 
@@ -50,8 +50,9 @@ public class PinyinTokenizer extends Tokenizer {
 
 	@Override
 	public boolean incrementToken() throws IOException {
-		System.out.println("..进入分词器..");
-
+		// System.out.println("..进入分词器..");
+		//此方法不可少
+		clearAttributes();
 		// 1. 读取所有字符
 		if (length == 0) {
 			int buffer = 0;
@@ -60,7 +61,7 @@ public class PinyinTokenizer extends Tokenizer {
 				sb.append(allBuffer[length]);
 				length++;
 			}
-			String py = pyUtil.converterToFirst(sb.toString(),false);
+			String py = pyUtil.converterToFirst(sb.toString(), false);
 			String[] pus = py.split(",");
 			List<String> pys = new ArrayList<String>();
 			for (String temp : pus) {
@@ -72,7 +73,6 @@ public class PinyinTokenizer extends Tokenizer {
 
 		// 2.分词第一步，单个分词
 		if (curnetIndex < length) {
-			charAttr.setEmpty();
 			charAttr.append(allBuffer[curnetIndex]);
 			curnetIndex++;
 			return true;
@@ -81,10 +81,19 @@ public class PinyinTokenizer extends Tokenizer {
 		// 3.分词第二步，首字母
 		while (itr.hasNext()) {
 			String temp = itr.next();
-			charAttr.setEmpty();
 			charAttr.append(temp);
 			return true;
 		}
+		// 清除所有的词项属性
+		this.init();
 		return false;
+	}
+
+	private void init() {
+		clearAttributes();
+		allBuffer = new char[255];
+		length = 0;
+		curnetIndex = 0;
+		sb = new StringBuffer();
 	}
 }
