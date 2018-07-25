@@ -10,6 +10,7 @@ package sicau.edu.cn.favorite.util.mail;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.Calendar;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -120,7 +121,8 @@ public class MailUtil {
 			// 创建邮件
 			Message msg = new MimeMessage(session);
 
-			msg.setSubject(key + "." + target.getSubject());
+			int m = Calendar.getInstance().get(Calendar.MILLISECOND);
+			msg.setSubject(key + "." + m + "." + target.getSubject());
 
 			if (target.getType() == 0) {
 				// 纯文本
@@ -228,6 +230,7 @@ public class MailUtil {
 
 					if (invoke != null)
 						invoke.invoke(mimeMessage);
+					break;
 				}
 
 				folder.close(false);

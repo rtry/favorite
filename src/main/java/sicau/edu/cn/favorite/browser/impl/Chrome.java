@@ -35,6 +35,14 @@ public class Chrome extends SuperBrowser {
 	@SuppressWarnings("unused")
 	private List<Bookmark> bookmarks;
 
+	private byte[] buffer;
+
+	public byte[] getBuffer() {
+		if (buffer == null)
+			getBookmarks();
+		return buffer;
+	}
+
 	@Override
 	public String getName() {
 		return name;
@@ -57,7 +65,7 @@ public class Chrome extends SuperBrowser {
 			FileInputStream fis = new FileInputStream(file);
 			// local file
 			int length = fis.available();
-			byte[] buffer = new byte[length];
+			buffer = new byte[length];
 			fis.read(buffer);
 			fis.close();
 			JSONObject json = (JSONObject) JSON.parse(buffer);
