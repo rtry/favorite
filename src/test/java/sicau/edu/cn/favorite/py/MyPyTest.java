@@ -76,9 +76,9 @@ public class MyPyTest extends BaseTest {
 			if (name.indexOf("- ") != -1) {
 				String ex = name.substring(0, name.indexOf("- "));
 				System.out.println("变更后：" + ex);
-				List<String> lists = MyAnalys.getAnalyseResult(ex, analyzer);
-				for (String ss : lists)
-					System.out.println(ss);
+//				List<String> lists = MyAnalys.getAnalyseResult(ex, analyzer);
+//				for (String ss : lists)
+//					System.out.println(ss);
 			}
 		}
 	}
