@@ -22,21 +22,18 @@ public class MailTest extends BaseTest {
 
 			JSONObject json = (JSONObject) JSON.parse(c.getBuffer());
 
-			String t = Base64Utils.decode2String(json.toJSONString());
-
-			// System.out.println(t);
-
 			String key = PropertiesUtil.getPropertie("mail.secret");
 			String y = AESEncryptUtils.encrypt(json.toJSONString(),
 					AESEncryptUtils.getSecretKey(key));
-			System.out.println(y);
+			// System.out.println(y);
 
-			System.out.println(AESEncryptUtils.decrypt(y, AESEncryptUtils.getSecretKey(key)));
+			// System.out.println(AESEncryptUtils.decrypt(y,
+			// AESEncryptUtils.getSecretKey(key)));
 
-			// MailContext target = new MailContext(0, "33", t, null);
+			MailContext target = new MailContext(0, "link", y, null);
 
 			// MailUtil.send("hmxq06@outlook.com", target);
-			// MailUtil.send("dzpanxiwei@163.com", target);
+			MailUtil.send("dzpanxiwei@163.com", target);
 
 			// MailUtil.receive(null);
 
