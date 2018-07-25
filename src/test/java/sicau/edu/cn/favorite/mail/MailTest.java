@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import sicau.edu.cn.favorite.BaseTest;
 import sicau.edu.cn.favorite.browser.impl.Chrome;
+import sicau.edu.cn.favorite.util.AESEncryptUtils;
 import sicau.edu.cn.favorite.util.Base64Utils;
 import sicau.edu.cn.favorite.util.PropertiesUtil;
 import sicau.edu.cn.favorite.util.mail.MailContext;
@@ -23,13 +24,21 @@ public class MailTest extends BaseTest {
 
 			String t = Base64Utils.decode2String(json.toJSONString());
 
-			MailContext target = new MailContext(0, "33", t, null);
+			// System.out.println(t);
+
 			String key = PropertiesUtil.getPropertie("mail.secret");
+			String y = AESEncryptUtils.encrypt(json.toJSONString(),
+					AESEncryptUtils.getSecretKey(key));
+			System.out.println(y);
+
+			System.out.println(AESEncryptUtils.decrypt(y, AESEncryptUtils.getSecretKey(key)));
+
+			// MailContext target = new MailContext(0, "33", t, null);
 
 			// MailUtil.send("hmxq06@outlook.com", target);
 			// MailUtil.send("dzpanxiwei@163.com", target);
 
-			MailUtil.receive(null);
+			// MailUtil.receive(null);
 
 			// System.out.println(PropertiesUtil.getPropertie("mail.username"));
 
