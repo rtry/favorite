@@ -48,6 +48,13 @@ public class MailContext {
 		super();
 	}
 
+	public MailContext(int type, String subject, String context) {
+		super();
+		this.type = type;
+		this.subject = subject;
+		this.context = context;
+	}
+
 	public MailContext(int type, String subject, String context, String personal) {
 		super();
 		this.type = type;

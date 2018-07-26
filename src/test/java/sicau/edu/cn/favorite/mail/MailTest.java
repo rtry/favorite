@@ -30,7 +30,7 @@ public class MailTest extends BaseTest {
 			// System.out.println(AESEncryptUtils.decrypt(y,
 			// AESEncryptUtils.getSecretKey(key)));
 
-			MailContext target = new MailContext(0, "link", y, null);
+			MailContext target = new MailContext(0, "link", y);
 
 			// MailUtil.send("hmxq06@outlook.com", target);
 			MailUtil.send("dzpanxiwei@163.com", target);
