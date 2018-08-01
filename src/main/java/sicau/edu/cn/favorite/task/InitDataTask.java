@@ -34,6 +34,8 @@ public class InitDataTask {
 
 	public void init() {
 		logger.info("========================正在初始化数据...========================");
+		// 每次重新构建
+		clear();
 		BookmarkDao bdao = new BookmarkDao();
 		// 查询最新的一条数据
 		Bookmark lastBm = bdao.getLast();
@@ -49,8 +51,7 @@ public class InitDataTask {
 					inserts.add(r);
 			}
 		}
-		// 每次重新构建
-		clear();
+
 		// 构建索引
 		bdao.bulkInsert(inserts);
 
@@ -71,6 +72,8 @@ public class InitDataTask {
 			File[] files = base.listFiles();
 			for (File f : files) {
 				if (f.canExecute()) {
+
+					f.deleteOnExit();
 					System.out.println(indexPath + "/" + f.getName() + " is delete " + f.delete());
 				}
 			}

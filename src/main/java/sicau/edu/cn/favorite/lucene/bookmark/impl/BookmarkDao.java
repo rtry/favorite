@@ -8,6 +8,7 @@
 package sicau.edu.cn.favorite.lucene.bookmark.impl;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -18,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.IntPoint;
@@ -37,6 +39,12 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.highlight.Fragmenter;
+import org.apache.lucene.search.highlight.Highlighter;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
+import org.apache.lucene.search.highlight.QueryScorer;
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+import org.apache.lucene.search.highlight.SimpleSpanFragmenter;
 import org.apache.lucene.search.suggest.Lookup.LookupResult;
 import org.apache.lucene.search.suggest.analyzing.AnalyzingInfixSuggester;
 import org.apache.lucene.util.BytesRef;
@@ -161,11 +169,29 @@ public class BookmarkDao extends AbstractLocalDao<Bookmark> implements IBookmark
 					TopDocs results = searcher.search(query, index);
 					scoreDoc = results.scoreDocs[index - 1];
 				}
+
+				// ↓***************设置高亮格式****************↓
+				QueryScorer scorer = new QueryScorer(query);
+				Fragmenter fragmenter = new SimpleSpanFragmenter(scorer);
+				SimpleHTMLFormatter simpleHTMLFormatter = new SimpleHTMLFormatter(
+						"<b><font color='red'>", "</font></b>");
+				Highlighter highlighter = new Highlighter(simpleHTMLFormatter, scorer);
+				highlighter.setTextFragmenter(fragmenter);
+				// ↑***************设置高亮格式****************↑
+
 				hits = searcher.searchAfter(scoreDoc, query, f.getSize());
 				for (int i = 0; i < hits.scoreDocs.length; i++) {
 					ScoreDoc sdoc = hits.scoreDocs[i];
 					Document doc = searcher.doc(sdoc.doc);
 					Bookmark b = this.convertFormDoc(doc);
+
+					// ↓***************设置高亮格式****************↓
+					TokenStream tokenStream = analyzer.tokenStream("name",
+							new StringReader(b.getName()));
+					String name = highlighter.getBestFragment(tokenStream, b.getName());
+					b.setName(name);
+					// ↑***************设置高亮格式****************↑
+
 					rt.add(b);
 				}
 			}
@@ -179,6 +205,8 @@ public class BookmarkDao extends AbstractLocalDao<Bookmark> implements IBookmark
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidTokenOffsetsException e) {
 			e.printStackTrace();
 		}
 		return page;
