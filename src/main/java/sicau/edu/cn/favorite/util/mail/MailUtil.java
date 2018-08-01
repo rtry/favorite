@@ -28,6 +28,7 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.commons.lang3.StringUtils;
 
+import sicau.edu.cn.favorite.util.AESEncryptUtils;
 import sicau.edu.cn.favorite.util.PropertiesUtil;
 import sicau.edu.cn.favorite.util.mail.MailProtocolServerFactory.MailProtocolTypeEnum;
 import sicau.edu.cn.favorite.util.mail.MailProtocolServerFactory.MailServerTypeEnum;
@@ -239,5 +240,11 @@ public class MailUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static MailContext instanceByAESEncrypt(int type, String subject, String context) {
+		String y = AESEncryptUtils.encrypt(context, AESEncryptUtils.getSecretKey(secret));
+		MailContext target = new MailContext(type, subject, y);
+		return target;
 	}
 }

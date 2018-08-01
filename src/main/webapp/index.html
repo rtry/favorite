@@ -228,9 +228,10 @@
 	    $("#list li").eq(count).addClass("selected").siblings().removeClass("selected");
 	    $(this).val($('#list li').eq(count).html());
 	  }else if(e.keyCode === 13){//Enter
-	    // 百度跳转链接
-	    var url = 'https://www.baidu.com/s?&rsv_spt=1&wd='+$(this).val();
-	    window.location.href = url;
+	    // 回车键刷新
+	    currentPage = 1;
+		var query = $("#queryInput").val();
+		loadDate(query, currentPage);
 	  }
 	})
 

@@ -44,9 +44,9 @@ import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
-import sicau.edu.cn.favorite.lucene.Page;
-import sicau.edu.cn.favorite.lucene.base.AbstractLocalDao;
+import sicau.edu.cn.favorite.lucene.base.dao.AbstractLocalDao;
 import sicau.edu.cn.favorite.lucene.base.suggest.StringIterator;
+import sicau.edu.cn.favorite.lucene.base.util.Page;
 import sicau.edu.cn.favorite.lucene.bookmark.IBookmarkDao;
 
 /**
@@ -126,41 +126,55 @@ public class BookmarkDao extends AbstractLocalDao<Bookmark> implements IBookmark
 	@Override
 	public Page<Bookmark> getPageListByForm(SearchPageForm f) {
 		Page<Bookmark> page = new Page<Bookmark>();
+		page.setCurrentPage(f.getPage());
 		QueryParser parser = new QueryParser("name", analyzer);
 		try {
 			IndexReader reader = DirectoryReader.open(indexDir);
 			IndexSearcher searcher = new IndexSearcher(reader);
 
 			List<Bookmark> rt = new ArrayList<Bookmark>();
-
+			int index = (f.getPage() - 1) * f.getSize();
+			ScoreDoc scoreDoc = null;
+			TopDocs hits = null;
 			if (f.getQuery() == null || f.getQuery().trim().equals("")) {
-				Query q = IntPoint.newExactQuery("allFlag", 1);
+				Query query = IntPoint.newExactQuery("allFlag", 1);
+				// 反序
 				Sort sort = new Sort(new SortField("createDate", SortField.Type.LONG, true));
 
-				TopDocs results = searcher.search(q, f.getSize(), sort);
-				ScoreDoc[] hits = results.scoreDocs;
-				for (ScoreDoc hit : hits) {
-					Document doc = searcher.doc(hit.doc);
+				// 如果当前页是第一页面scoreDoc=null。
+				if (index > 0) {
+					TopDocs results = searcher.search(query, index, sort);
+					// 因为索引是从0开始所以要index-1
+					scoreDoc = results.scoreDocs[index - 1];
+				}
+
+				hits = searcher.searchAfter(scoreDoc, query, f.getSize(), sort);
+				for (int i = 0; i < hits.scoreDocs.length; i++) {
+					ScoreDoc sdoc = hits.scoreDocs[i];
+					Document doc = searcher.doc(sdoc.doc);
 					Bookmark b = this.convertFormDoc(doc);
 					rt.add(b);
 				}
 			} else {
-
 				Query query = parser.parse(f.getQuery());
-
-				TopDocs results = searcher.search(query, f.getSize());
-				ScoreDoc[] hits = results.scoreDocs;
-				for (ScoreDoc hit : hits) {
-					Document doc = searcher.doc(hit.doc);
+				if (index > 0) {
+					TopDocs results = searcher.search(query, index);
+					scoreDoc = results.scoreDocs[index - 1];
+				}
+				hits = searcher.searchAfter(scoreDoc, query, f.getSize());
+				for (int i = 0; i < hits.scoreDocs.length; i++) {
+					ScoreDoc sdoc = hits.scoreDocs[i];
+					Document doc = searcher.doc(sdoc.doc);
 					Bookmark b = this.convertFormDoc(doc);
 					rt.add(b);
 				}
 			}
-			page.setHasNext(false);
-			page.setCurrentPage(1);
+			int totalNum = Long.valueOf(hits.totalHits).intValue();
+			int totalPage = totalNum / f.getSize();
+			page.setHasNext(totalNum > page.getCurrentPage() * f.getSize());
 			page.setResults(rt);
-			page.setTotalNums(rt.size());
-			page.setTotalPages(1);
+			page.setTotalNums(totalNum);
+			page.setTotalPages(totalPage + 1);
 			reader.close();
 		} catch (ParseException e) {
 			e.printStackTrace();

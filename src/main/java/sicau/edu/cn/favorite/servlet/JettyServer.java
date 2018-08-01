@@ -55,8 +55,10 @@ public class JettyServer {
 		String proPath = System.getProperty("user.dir");
 		logger.info("项目路径：" + proPath);
 		context.setResourceBase(proPath + "/src/main/webapp");
+
 		// 手动添加比注解发现，对项目发布，Servlet日志更友好
 		context.addServlet(SearchServlet.class, "/search");
+
 		server.setHandler(context);
 
 		try {

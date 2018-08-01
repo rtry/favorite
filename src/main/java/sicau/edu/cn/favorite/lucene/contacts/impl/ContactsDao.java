@@ -33,8 +33,8 @@ import org.wltea.analyzer.py.contact.ContactPinyinAnalyzer;
 
 import sicau.edu.cn.favorite.contacts.Contacts;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
-import sicau.edu.cn.favorite.lucene.Page;
-import sicau.edu.cn.favorite.lucene.base.AbstractLocalDao;
+import sicau.edu.cn.favorite.lucene.base.dao.AbstractLocalDao;
+import sicau.edu.cn.favorite.lucene.base.util.Page;
 import sicau.edu.cn.favorite.lucene.contacts.IContactsDao;
 
 /**

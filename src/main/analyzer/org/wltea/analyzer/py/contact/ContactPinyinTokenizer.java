@@ -15,7 +15,7 @@ import java.util.List;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
-import sicau.edu.cn.favorite.py.Pinyin4jUtil;
+import sicau.edu.cn.favorite.util.Pinyin4jUtil;
 
 /**
  * 类名称：PinyinTokenizer <br>

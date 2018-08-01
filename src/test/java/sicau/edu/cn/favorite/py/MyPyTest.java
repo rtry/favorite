@@ -23,9 +23,10 @@ import sicau.edu.cn.favorite.browser.impl.Chrome;
 import sicau.edu.cn.favorite.contacts.Contacts;
 import sicau.edu.cn.favorite.contacts.CorrespondenceRandomUtil;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
-import sicau.edu.cn.favorite.lucene.Page;
+import sicau.edu.cn.favorite.lucene.base.util.Page;
 import sicau.edu.cn.favorite.lucene.contacts.impl.ContactsDao;
 import sicau.edu.cn.favorite.simple.MyAnalys;
+import sicau.edu.cn.favorite.util.Pinyin4jUtil;
 
 /**
  * 类名称：MyPyTest <br>

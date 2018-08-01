@@ -5,7 +5,7 @@
  * 日期：2018年7月19日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.lucene.util;
+package sicau.edu.cn.favorite.lucene.base.util;
 
 import java.io.IOException;
 import java.io.StringReader;

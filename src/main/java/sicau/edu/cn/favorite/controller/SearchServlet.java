@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import sicau.edu.cn.favorite.browser.entry.Bookmark;
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
-import sicau.edu.cn.favorite.lucene.Page;
+import sicau.edu.cn.favorite.lucene.base.util.Page;
 import sicau.edu.cn.favorite.lucene.bookmark.IBookmarkDao;
 import sicau.edu.cn.favorite.lucene.bookmark.impl.BookmarkDao;
 import sicau.edu.cn.favorite.util.ServiceUtil;

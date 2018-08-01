@@ -5,7 +5,7 @@
  * 日期：2018年6月26日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.lucene.base;
+package sicau.edu.cn.favorite.lucene.base.dao;
 
 import org.apache.lucene.document.Document;
 

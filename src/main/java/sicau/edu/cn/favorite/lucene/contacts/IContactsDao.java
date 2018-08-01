@@ -1,7 +1,7 @@
 package sicau.edu.cn.favorite.lucene.contacts;
 
 import sicau.edu.cn.favorite.controller.form.SearchPageForm;
-import sicau.edu.cn.favorite.lucene.Page;
+import sicau.edu.cn.favorite.lucene.base.util.Page;
 
 public interface IContactsDao<T> {
 

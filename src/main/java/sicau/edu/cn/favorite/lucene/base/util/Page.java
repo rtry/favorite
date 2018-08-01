@@ -5,7 +5,7 @@
  * 日期：2018年1月26日    
  * Copyright Felicity Corporation 2018 版权所有   
  */
-package sicau.edu.cn.favorite.lucene;
+package sicau.edu.cn.favorite.lucene.base.util;
 
 import java.util.List;
 

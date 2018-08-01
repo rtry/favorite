@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.wltea.analyzer.py.contact.ContactPinyinAnalyzer;
 
 import sicau.edu.cn.favorite.BaseTest;
-import sicau.edu.cn.favorite.lucene.util.AnalyzerUtil;
+import sicau.edu.cn.favorite.lucene.base.util.AnalyzerUtil;
 
 /**
  * 类名称：MyWhitespaceAnalyzerTest <br>
